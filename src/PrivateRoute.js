@@ -3,10 +3,8 @@ import { Navigate, Outlet } from "react-router-dom";
 
 import { Pathname } from "./Pathname";
 
-let accessToken = localStorage.getItem("t_id");
-
 export const PrivateRoute = () => {
-	const auth = accessToken;
+	const auth = localStorage.getItem("t_id");
 	return auth ? <Outlet /> : <Navigate to={Pathname.LOGIN} />;
 };
 

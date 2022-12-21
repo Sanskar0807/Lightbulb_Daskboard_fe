@@ -5,33 +5,37 @@
 @import './Styles/sass/variables';
 @import './Styles/sass/mixins';
 
-* {
+body{
 	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-
-	&::-webkit-scrollbar {
-		width: 5px;
-		height: 5px;
-	}
 }
 
-html {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-size: 62.5%; // 1rem = 10px = 62.5%
+// * {
+// 	margin: 0;
+// 	padding: 0;
+// 	box-sizing: border-box;
 
-	body {
-		font-family: $main_font;
-		background-color: $light;
-		font-size: $text_size;
-		letter-spacing: 0.017rem;
-		line-height: 1;
-		overflow-x: hidden;
-		background-color: $bgcolor;
-	}
-}
+// 	&::-webkit-scrollbar {
+// 		width: 5px;
+// 		height: 5px;
+// 	}
+// }
+
+// html {
+// 	margin: 0;
+// 	padding: 0;
+// 	box-sizing: border-box;
+// 	font-size: 62.5%; // 1rem = 10px = 62.5%
+
+// 	body {
+// 		font-family: $main_font;
+// 		background-color: $light;
+// 		font-size: $text_size;
+// 		letter-spacing: 0.017rem;
+// 		line-height: 1;
+// 		overflow-x: hidden;
+// 		background-color: $bgcolor;
+// 	}
+// }
 
 img {
 	object-fit: contain;
