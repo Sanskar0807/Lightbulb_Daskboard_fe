@@ -1,3 +1,4 @@
+import { mergeStateWithSortModel } from "@mui/x-data-grid/hooks/features/sorting/gridSortingUtils";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -15,7 +16,7 @@ const initialState = {
 
   error: "",
   success: false,
-  isUserFirstTime:true,
+  isUserFirstTime: true,
   google_token: "",
   calendarData: "",
   filterData: [],
@@ -24,7 +25,40 @@ const initialState = {
   Get_GoogleCodeResponse: "",
   FinalCalendarData: [],
 };
-
+const rows = [
+  {
+    id: 1,
+    meetingId: "o9breh0o57k66tqvhiqi6l2808",
+    organizer: "sumit.kumar.antino@gmail.com",
+    startTime: "2022-12-10T21:30:00+05:30",
+    endTime: "2022-12-11T06:30:00+05:30",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
+  },
+  {
+    id: 2,
+    meetingId: "31u0b6vhmiscot2rlm9thee8oc",
+    organizer: "rohan.antino@gmail.com",
+    startTime: "2022-12-10T21:30:00+05:30",
+    endTime: "2022-12-11T06:30:00+05:30",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
+  },
+  {
+    id: 3,
+    meetingId: "723fn06381pfoe0seiftkc4ebn",
+    organizer: "pram.antino@gmail.com",
+    startTime: "2022-12-10T21:30:00+05:30",
+    endTime: "2022-12-11T06:30:00+05:30",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
+  },
+  {
+    id: 4,
+    meetingId: "50lmq1se43hrqnehuobsuo6ucd",
+    organizer: "piyush.antino@gmail.com",
+    startTime: "2022-12-10T21:30:00+05:30",
+    endTime: "2022-12-11T06:30:00+05:30",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
+  },
+];
 //SIGNUP
 
 export const GetCalendarData = createAsyncThunk(
@@ -82,19 +116,15 @@ export const filterMeetingData = createAsyncThunk(
     }
   }
 );
-
 //get_url
 export const Get_Url = createAsyncThunk("/get_url", async (_, thunkAPI) => {
   try {
-    const { data } = await services.get(
-      "meeting/get_url",
-      {
-        headers: {
-          "ngrok-skip-browser-warning": true,
-          Authorization: `Bearer ${get_Token()}`,
-        },
-      }
-    );
+    const { data } = await services.get("meeting/get_url", {
+      headers: {
+        "ngrok-skip-browser-warning": true,
+        Authorization: `Bearer ${get_Token()}`,
+      },
+    });
     console.log(data?.data?.response);
     return data?.data?.response;
   } catch (error) {
@@ -106,7 +136,7 @@ export const set_GoogleCode = createAsyncThunk(
   "/set_code",
   async (payload, thunkAPI) => {
     try {
-      console.log("set_code Action", payload);
+      console.log("afterConsent Action", payload);
 
       const { data } = await services.post(
         "meeting/afterConsent",
@@ -118,29 +148,27 @@ export const set_GoogleCode = createAsyncThunk(
           },
         }
       );
-      // console.log("set_code api result", data?.data?.response);
+      console.log("afterConsent api result", data?.data?.response);
 
-      return data?.data?.response?.status;
+      return data?.data?.response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 // CalendarData
-export const FinalCalendarData = createAsyncThunk(
+export const FinalCalendarDataAction = createAsyncThunk(
   "/CalendarData",
   async (_, thunkAPI) => {
     try {
       console.log(" final CalendarData Action");
-      const { data } = await services.get(
-        "meeting/get_calendar",
-        {
-          headers: {
-            "ngrok-skip-browser-warning": true,
-            Authorization: `Bearer ${get_Token()}`,
-          },
-        }
-      );
+      const { data } = await services.get("meeting/get_calendar", {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          Authorization: `Bearer ${get_Token()}`,
+        },
+      });
+      console.log("get calendar data",data?.data?.response?.data);
       return data?.data?.response?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
@@ -207,10 +235,10 @@ export const PlatformSlice = createSlice({
       state.Get_UrlLoading = "pending";
     });
     builder.addCase(Get_Url.fulfilled, (state, action) => {
-      console.log("action",action);
+      console.log("action", action);
       state.Get_UrlLoading = "succeeded";
       state.Get_UrlLink = action.payload?.data;
-      state.isUserFirstTime = action.payload?.isUserFirstTime
+      state.isUserFirstTime = action.payload?.isUserFirstTime;
     });
     builder.addCase(Get_Url.rejected, (state, action) => {
       state.Get_UrlLoading = "fail";
@@ -222,21 +250,24 @@ export const PlatformSlice = createSlice({
     });
     builder.addCase(set_GoogleCode.fulfilled, (state, action) => {
       state.set_CodeLoading = "succeeded";
-      state.Get_GoogleCodeResponse = action.payload;
+      state.Get_GoogleCodeResponse = action.payload?.status;
+      state.isUserFirstTime = action.payload?.isUserFirstTime;
     });
     builder.addCase(set_GoogleCode.rejected, (state, action) => {
       state.set_CodeLoading = "fail";
     });
 
     //FinalCalendarData
-    builder.addCase(FinalCalendarData.pending, (state) => {
+    builder.addCase(FinalCalendarDataAction.pending, (state) => {
       state.FinalCalendarLoading = "pending";
     });
-    builder.addCase(FinalCalendarData.fulfilled, (state, action) => {
+    builder.addCase(FinalCalendarDataAction.fulfilled, (state, action) => {
       state.FinalCalendarLoading = "succeeded";
+      console.log("chal bhai",action.payload);
       state.FinalCalendarData = action.payload;
     });
-    builder.addCase(FinalCalendarData.rejected, (state, action) => {
+    builder.addCase(FinalCalendarDataAction.rejected, (state, action) => {
+      state.FinalCalendarData = [];
       state.FinalCalendarLoading = "fail";
     });
   },

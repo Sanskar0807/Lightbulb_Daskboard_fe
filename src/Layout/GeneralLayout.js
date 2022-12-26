@@ -5,16 +5,18 @@ import Header from "../Components/Header/Header";
 import { Pathname } from "../Pathname";
 import "./GeneralLayout.scss";
 
-const GeneralLayout = ({ children,IntergationClick,setIntergationClick }) => {
+const GeneralLayout = ({ children,}) => {
   
   const navigate = useNavigate()
   const handleIntegrationClick =()=>{
     navigate(Pathname.DASHBOARD)
 
-    setIntergationClick(2)
   }
   const handleMeetingClick=()=>{
-    navigate("/zoom")
+    navigate(Pathname.ZOOM)
+  }
+  const handleMeetingVideo =()=>{
+    navigate(Pathname.VIDEOS)
   }
   
   return (
@@ -47,6 +49,13 @@ const GeneralLayout = ({ children,IntergationClick,setIntergationClick }) => {
                 sx={{ display: "flex", justifyContent: "center" }}
               >
                 <Button variant="contained" sx={{width:"100%"}} onClick={handleMeetingClick} >Meetings</Button>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <Button variant="contained" sx={{width:"100%"}} onClick={handleMeetingVideo} >Recorded Videos</Button>
               </Grid>
             </Grid>
           </div>

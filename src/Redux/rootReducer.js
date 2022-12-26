@@ -9,6 +9,8 @@ import platformReducer from "../Views/afterAuth/PlatformLogin/Redux/reducer"
 import resetReducer from "../Views/beforeAuth/ResetPassword/Redux/reducer"
 import forgetReducer from "../Views/beforeAuth/ForgetPassword/Redux/reducer"
 import userUpdateReducer from "../Views/afterAuth/UpdateProfile/Redux/reducer"
+import editMeetingReducer from "../Views/afterAuth/EditMeeting/Redux/reducer"
+import createMeetingReducer from "../Views/afterAuth/CreateMeeting/Redux/reducer"
 
 
 export const rootReducer = {
@@ -17,7 +19,9 @@ export const rootReducer = {
 	Signup: SignupReducer,
 	reset:resetReducer,
 	forget:forgetReducer,
+	createMeeting:createMeetingReducer,
 	userUpdate:userUpdateReducer,
+	editMeeting:editMeetingReducer,
 	dashboard: dashboardSlice.reducer,
 	platform:platformReducer
 };

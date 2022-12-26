@@ -15,6 +15,7 @@ import GoogleSignup from "./Components/GoogleSignup/GoogleSignup";
 import PlatformLogin from "./Views/afterAuth/PlatformLogin/PlatformLogin";
 import ZoomEvent from "./Components/ZoomEvent/ZoomEvent";
 import UpdateProfile from "./Views/afterAuth/UpdateProfile/UpdateProfile";
+import MeetingURl from "./Views/afterAuth/MeetingURl/MeetingURl";
 
 const Dashboard = React.lazy(() =>
   import("./Views/afterAuth/Dashboard/Dashboard")
@@ -35,6 +36,7 @@ export function App() {
           <Route index path={Pathname.LANDING_PAGE} element={<Landing />} />
           <Route path={Pathname.ZOOM} element={<ZoomEvent />} />
           <Route path={Pathname.UPDATEPROFILE} element={<UpdateProfile />} />
+          <Route path={Pathname.VIDEOS} element={<MeetingURl/> } />
 
           <Route path={Pathname.DASHBOARD} element={<PrivateOutlet />}>
             <Route index element={<Dashboard />} />

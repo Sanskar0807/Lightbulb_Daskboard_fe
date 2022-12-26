@@ -1,18 +1,18 @@
 export const formateData = (items) => {
-  return items.map((e) => {
+  return items?.map((e) => {
     return {
-      id: e?.meetingId,
+      id: e?.meetingUrl,
       organizer: e?.organizer,
-
+      meetingTitle: e?.meetingTitle,
       timeZone: e?.timeZone,
-      
+
       startTime: get_FormatDate(e?.startTime),
 
       endTime: get_FormatDate(e?.endTime),
 
       plateform: e?.plateform,
 
-      meetingUrl: e?.meetingUrl,
+      meetingUrl: e?.meetingTitle,
 
       // meetingCode: e.conferenceData?.entryPoints[0].meetingCode,
 
@@ -21,13 +21,28 @@ export const formateData = (items) => {
   });
 };
 
-
-export const removeLocalStorage = ()=>{
+export const removeLocalStorage = () => {
   localStorage.clear();
-}
-export const get_Token = ()=>{
-  return localStorage.getItem('t_id')
-}
-export const get_FormatDate = (date)=>{
-  return new Date(date).toLocaleString()
-}
+};
+export const get_Token = () => {
+  return localStorage.getItem("t_id");
+};
+export const get_FormatDate = (date) => {
+  return new Date(date).toLocaleString();
+};
+export const get_UTCFormateDate = (date) => {
+  let newDate = new Date(date);
+  // console.log(newDate.getFullYear(),newDate.getMonth(),newDate.getDate());
+  // const utcDate = new Date(
+  //   Date.UTC(
+  //     newDate.getFullYear(),
+  //     newDate.getMonth(),
+  //     newDate.getDate(),
+  //     newDate.getHours(),
+  //     newDate.getMinutes()
+  //   )
+  // );
+let isoDate = newDate.toISOString()
+
+  return isoDate;
+};

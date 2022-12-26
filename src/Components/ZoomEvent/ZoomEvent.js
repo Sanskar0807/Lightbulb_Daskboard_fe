@@ -1,50 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, Link, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import "./ZoomEvent.scss";
 import GeneralLayout from "../../Layout/GeneralLayout";
 import { useDispatch, useSelector } from "react-redux";
 import {
   filterMeetingData,
+  FinalCalendarDataAction,
   GetCalendarData,
 } from "../../Views/afterAuth/PlatformLogin/Redux/reducer";
 import { formateData } from "../../utils/Helper";
-// import { useDemoData } from '@mui/x-data-grid-generator';
-
-const columns = [
-  { field: "id", headerName: "MEETING ID", width: 250 },
-  {
-    field: "organizer",
-    headerName: "ORGANIZER",
-    width: 250,
-    editable: true,
-  },
-  {
-    field: "meetingUrl",
-    headerName: "MEETING URL",
-    width: 250,
-    editable: true,
-  },
-  {
-    field: "plateform",
-    headerName: "PLATEFORM",
-    width: 250,
-    editable: true,
-  },
-  {
-    field: "startTime",
-    headerName: "START TIME",
-    width: 250,
-    editable: true,
-  },
-  {
-    field: "endTime",
-    headerName: "END TIME",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 250,
-  },
-];
+import editIcon from "../../Assets/images/edit.png";
+import deleteIcon from "../../Assets/images/waste.png";
+import EditMeeting from "../../Views/afterAuth/EditMeeting/EditMeeting";
+import CreateMeeting from "../../Views/afterAuth/CreateMeeting/CreateMeeting";
+import { deleteMeetingAction } from "../../Views/afterAuth/EditMeeting/Redux/reducer";
 const newRow = [
   {
     meetingId: "6be3kt4arthrvv32o8kag1glbu",
@@ -75,7 +45,7 @@ const rows = [
     organizer: "sumit.kumar.antino@gmail.com",
     startTime: "2022-12-10T21:30:00+05:30",
     endTime: "2022-12-11T06:30:00+05:30",
-    meetingLink: "https://meet.google.com/pav-vgjk-xaf",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
   },
   {
     id: 2,
@@ -83,7 +53,7 @@ const rows = [
     organizer: "rohan.antino@gmail.com",
     startTime: "2022-12-10T21:30:00+05:30",
     endTime: "2022-12-11T06:30:00+05:30",
-    meetingLink: "https://meet.google.com/pav-vgjk-xaf",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
   },
   {
     id: 3,
@@ -91,7 +61,7 @@ const rows = [
     organizer: "pram.antino@gmail.com",
     startTime: "2022-12-10T21:30:00+05:30",
     endTime: "2022-12-11T06:30:00+05:30",
-    meetingLink: "https://meet.google.com/pav-vgjk-xaf",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
   },
   {
     id: 4,
@@ -99,21 +69,97 @@ const rows = [
     organizer: "piyush.antino@gmail.com",
     startTime: "2022-12-10T21:30:00+05:30",
     endTime: "2022-12-11T06:30:00+05:30",
-    meetingLink: "https://meet.google.com/pav-vgjk-xaf",
+    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
   },
-  // { id: 5, meetingId: "Targaryen", organizer: "Daenerys", startTime: null },
-  // { id: 6, meetingId: "Melisandre", organizer: null, startTime: 150 },
-  // { id: 7, meetingId: "Clifford", organizer: "Ferrara", startTime: 44 },
-  // { id: 8, meetingId: "Frances", organizer: "Rossini", startTime: 36 },
-  // { id: 9, meetingId: "Roxie", organizer: "Harvey", startTime: 65 },
 ];
 
 const ZoomEvent = () => {
+  const columns = [
+    { field: "meetingTitle", headerName: "MEETING TITLE", width: 150 },
+    {
+      field: "organizer",
+      headerName: "ORGANIZER",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "id",
+      headerName: "MEETING URL",
+      width: 300,
+      renderCell: (params) => (
+        <Link
+          to={`/form/${params.value}`}
+          onClick={() => window.open(params.value)}
+        >
+          {params.value}
+        </Link>
+      ),
+    },
+    {
+      field: "plateform",
+      headerName: "PLATEFORM",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 200,
+      renderCell: () => (
+        <Button variant="contained" color="success">
+          success
+        </Button>
+      ),
+    },
+    {
+      field: "startTime",
+      headerName: "START TIME",
+      width: 250,
+      editable: true,
+    },
+    {
+      field: "endTime",
+      headerName: "END TIME",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 250,
+    },
+    {
+      field: "update",
+      headerName: " ",
+      width: 100,
+      // valueGetter: handleOpenVideo,
+      renderCell: ({ row }) => (
+        <>
+          <img
+            src={editIcon}
+            style={{ width: "30px", marginRight: "4px", cursor: "pointer" }}
+            onClick={() => {
+              handleEditClick(row);
+            }}
+          />
+          <img
+            src={deleteIcon}
+            style={{ width: "30px", cursor: "pointer" }}
+            onClick={() => {
+              handleDeleteClick(row);
+            }}
+          />
+        </>
+      ),
+    },
+  ];
   const dispatch = useDispatch();
-  const { calendarData, googleTokenloading, filterData, FinalCalendarData } =
-    useSelector((state) => state.platform);
+  const {
+    calendarData,
+    googleTokenloading,
+    filterData,
+    FinalCalendarData,
+    Get_GoogleCodeResponse,
+  } = useSelector((state) => state.platform);
   const [SelectedData, setSelectedData] = useState([]);
   const [GoogleorganizeData, setGoogleorganizeData] = useState([]);
+  const [RowData, setRowData] = useState("");
   const [zoomData, setZoomData] = useState([
     {
       meetingId: "o9breh0o57k66tqvhiqi6l2808",
@@ -145,13 +191,33 @@ const ZoomEvent = () => {
       meetingUrl: "https://meet.google.com/pmr-unvj-mqs",
     },
   ]);
+  const [modalToggle, setModalToggle] = useState(false);
+  const [CreateMeetingModal, setCreateMeetingModal] = useState(false);
+
+  const handleEditClick = (row) => {
+    console.log(RowData);
+    setModalToggle(true);
+    setRowData(row);
+  };
+  const handleDeleteClick = (row) => {
+    FinalCalendarData?.map((data) => {
+      if (data.meetingUrl == row.id) {
+        console.log("Row ID", data);
+        dispatch(deleteMeetingAction({ eventId: data.meetingId }));
+      }
+    });
+  };
+
+  useEffect(() => {
+    dispatch(FinalCalendarDataAction());
+  }, [dispatch]);
 
   const handleSelectedRow = (row) => {
     console.log(row, FinalCalendarData);
     let temp = [];
     for (let i = 0; i < FinalCalendarData.length; i++) {
       for (let j = 0; j < row.length; j++) {
-        if (FinalCalendarData[i].meetingId == row[j]) {
+        if (FinalCalendarData[i].meetingUrl == row[j]) {
           // setSelectedData([...SelectedData, temp[i]]);
           temp.push(FinalCalendarData[i]);
         }
@@ -163,21 +229,39 @@ const ZoomEvent = () => {
     }
   };
 
+  const handleMeetingUrl = (row) => {
+    setRowData(row.row);
+    // if (row.row.id) {
+    //   window.open(row.row.id)
+    // }
+  };
+  const handleCreateMeeting = () => {
+    setCreateMeetingModal(true);
+  };
+
   return (
     <GeneralLayout>
       <div className="ZoomUI">
-        <h1 className="ZoomUI--Header">Google Meet data Calendar</h1>
-        {/* <Button variant="contained" onClick={(e)=>{handleSync(e)}}>
-          Sync
-        </Button> */}
+        <h1 className="ZoomUI--Header">Calendar Data </h1>
+        <Button
+          variant="contained"
+          onClick={(e) => {
+            handleCreateMeeting(e);
+          }}
+        >
+          Create Meeting
+        </Button>
         <Box sx={{ height: 500, width: "100%" }}>
-          {false ? (
+          {FinalCalendarData?.length <= 0 &&
+          FinalCalendarData != [] &&
+          FinalCalendarData != "" ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </div>
           ) : (
             <DataGrid
-              rows={formateData(FinalCalendarData)}
+              // rows={formateData(FinalCalendarData)}
+              rows={rows}
               columns={columns}
               pstartTimeSize={5}
               rowsPerPstartTimeOptions={[5]}
@@ -185,11 +269,33 @@ const ZoomEvent = () => {
               disableSelectionOnClick
               experimentalFeatures={{ newEditingApi: true }}
               onSelectionModelChange={handleSelectedRow}
-              
+              // onRowClick={(data) => {
+              //   handleMeetingUrl(data);
+              // }}
             />
           )}
         </Box>
       </div>
+      {/* update meeting modal */}
+      <Modal
+        open={modalToggle}
+        onClose={modalToggle}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <EditMeeting setModalToggle={setModalToggle} RowData={RowData} />
+      </Modal>
+      {/* Create meeting */}
+      <Modal
+        open={CreateMeetingModal}
+        onClose={CreateMeetingModal}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <CreateMeeting setCreateMeetingModal={setCreateMeetingModal} />
+      </Modal>
     </GeneralLayout>
   );
 };

@@ -4,7 +4,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import services from "../../../../Common/services";
 import { toast } from "react-toastify";
 import { removeLocalStorage } from "../../../../utils/Helper";
+import { useNavigate } from "react-router-dom";
+import { Pathname } from "../../../../Pathname";
 const cookies = new Cookie()
+// const navigate = useNavigate()
 const initialState = {
   t_id: cookies.get("t_id") || "",
   loginLoading: "idle", //"idle", "pending", "succeeded", "fail"
@@ -38,6 +41,7 @@ export const logout = createAsyncThunk("auth/logout", () => {
   try {
     console.log("Log out Action");
     removeLocalStorage()
+    // navigate(Pathname.LOGIN)
     return true;
   } catch (e) {
     console.log({ e });
