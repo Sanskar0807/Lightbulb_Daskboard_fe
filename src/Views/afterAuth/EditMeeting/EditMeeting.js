@@ -74,8 +74,9 @@ const EditMeeting = ({ setModalToggle,RowData}) => {
     
     event.preventDefault();
     console.log({...UpdateProfileData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate)});
-    // dispatch(editMeetingAction({...UpdateProfileData,startTime:startDate,endTime:endDate}));
+    dispatch(editMeetingAction({...UpdateProfileData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate)}));
     // console.log("final data",UpdateProfileData,startDate,endDate);
+    setModalToggle(false)
 
 
   };

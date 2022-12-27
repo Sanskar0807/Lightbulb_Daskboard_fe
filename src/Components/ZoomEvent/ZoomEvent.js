@@ -11,10 +11,11 @@ import {
 } from "../../Views/afterAuth/PlatformLogin/Redux/reducer";
 import { formateData } from "../../utils/Helper";
 import editIcon from "../../Assets/images/edit.png";
-import deleteIcon from "../../Assets/images/waste.png";
+import crossIcon from "../../Assets/images/crossIcon.png";
 import EditMeeting from "../../Views/afterAuth/EditMeeting/EditMeeting";
 import CreateMeeting from "../../Views/afterAuth/CreateMeeting/CreateMeeting";
 import { deleteMeetingAction } from "../../Views/afterAuth/EditMeeting/Redux/reducer";
+import ConfirmationPopup from "../ConfirmationPopup/ConfirmationPopup";
 const newRow = [
   {
     meetingId: "6be3kt4arthrvv32o8kag1glbu",
@@ -87,12 +88,19 @@ const ZoomEvent = () => {
       headerName: "MEETING URL",
       width: 300,
       renderCell: (params) => (
-        <Link
-          to={`/form/${params.value}`}
-          onClick={() => window.open(params.value)}
-        >
-          {params.value}
-        </Link>
+        <>
+          {(params.row.meetingStatus == "cancelled") || (params.row.botStatus )  ? (
+            <p /* style={{textDecoration: "line-through" }} */>{params?.value}</p>
+          ) : (
+            <Link
+              to={`/form/${params.value}`}
+              onClick={() => window.open(params.value)}
+              style={{ cursor: "pointer" }}
+            >
+              {params?.value}
+            </Link>
+          )}
+        </>
       ),
     },
     {
@@ -102,12 +110,42 @@ const ZoomEvent = () => {
       editable: true,
     },
     {
-      field: "status",
+      field: "meetingStatus",
       headerName: "Status",
       width: 200,
-      renderCell: () => (
-        <Button variant="contained" color="success">
-          success
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
+          color={`${
+            params?.value == "cancelled"
+              ? "error"
+              : params?.value == "upComing"
+              ? "warning"
+              : "success"
+          }`}
+        >
+          {params?.value == "cancelled"
+            ? "cancelled"
+            : params?.value == "upComing"
+            ? "upComing"
+            : params?.value == "updated"
+            ? "Rescheduled"
+            : "pending"}
+        </Button>
+      ),
+    },
+    {
+      field: "botStatus",
+      headerName: "Bot Status",
+      width: 200,
+      renderCell: ({ row }) => (
+        <Button
+          variant="contained"
+          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
+          color={`success`}
+        >
+          {row.botStatus?"Bot Join":"Manual"}
         </Button>
       ),
     },
@@ -131,20 +169,30 @@ const ZoomEvent = () => {
       // valueGetter: handleOpenVideo,
       renderCell: ({ row }) => (
         <>
-          <img
-            src={editIcon}
-            style={{ width: "30px", marginRight: "4px", cursor: "pointer" }}
-            onClick={() => {
-              handleEditClick(row);
-            }}
-          />
-          <img
-            src={deleteIcon}
-            style={{ width: "30px", cursor: "pointer" }}
-            onClick={() => {
-              handleDeleteClick(row);
-            }}
-          />
+          {row.meetingStatus == "cancelled" ? (
+            ""
+          ) : (
+            <>
+              <img
+                src={editIcon}
+                style={{ width: "25px", marginRight: "4px", cursor: "pointer" }}
+                onClick={() => {
+                  handleEditClick(row);
+                }}
+              />
+              <ConfirmationPopup
+                message={`Do you really want to cancel meeting?`}
+                handleConfirmation={() => handleDeleteClick(row)}
+                render={(handlePopupOpen) => (
+                  <img
+                    src={crossIcon}
+                    style={{ width: "25px", cursor: "pointer" }}
+                    onClick={handlePopupOpen}
+                  />
+                )}
+              />
+            </>
+          )}
         </>
       ),
     },
@@ -156,6 +204,7 @@ const ZoomEvent = () => {
     filterData,
     FinalCalendarData,
     Get_GoogleCodeResponse,
+    meetingStatus,
   } = useSelector((state) => state.platform);
   const [SelectedData, setSelectedData] = useState([]);
   const [GoogleorganizeData, setGoogleorganizeData] = useState([]);
@@ -193,9 +242,10 @@ const ZoomEvent = () => {
   ]);
   const [modalToggle, setModalToggle] = useState(false);
   const [CreateMeetingModal, setCreateMeetingModal] = useState(false);
+  const [tempSelectedRow, setTempSelectedRow] = useState([]);
 
   const handleEditClick = (row) => {
-    console.log(RowData);
+    // console.log(RowData);
     setModalToggle(true);
     setRowData(row);
   };
@@ -203,6 +253,7 @@ const ZoomEvent = () => {
     FinalCalendarData?.map((data) => {
       if (data.meetingUrl == row.id) {
         console.log("Row ID", data);
+
         dispatch(deleteMeetingAction({ eventId: data.meetingId }));
       }
     });
@@ -211,21 +262,27 @@ const ZoomEvent = () => {
   useEffect(() => {
     dispatch(FinalCalendarDataAction());
   }, [dispatch]);
+  console.log(tempSelectedRow);
 
   const handleSelectedRow = (row) => {
-    console.log(row, FinalCalendarData);
-    let temp = [];
     for (let i = 0; i < FinalCalendarData.length; i++) {
       for (let j = 0; j < row.length; j++) {
         if (FinalCalendarData[i].meetingUrl == row[j]) {
-          // setSelectedData([...SelectedData, temp[i]]);
-          temp.push(FinalCalendarData[i]);
+          setTempSelectedRow([
+            ...tempSelectedRow,
+            FinalCalendarData[i].meetingId,
+          ]);
         }
       }
     }
 
-    if (temp.length > 0) {
-      dispatch(filterMeetingData(temp));
+    // for (let t = 0; t < array.tempSelectedRow; t++) {
+    //   const element = array[t];
+
+    // }
+
+    if (tempSelectedRow.length > 0) {
+      // dispatch(filterMeetingData(temp));
     }
   };
 
@@ -239,18 +296,37 @@ const ZoomEvent = () => {
     setCreateMeetingModal(true);
   };
 
+  const handleBotMeetingJoin = () => {
+    if (tempSelectedRow.length > 0) {
+      dispatch(filterMeetingData(tempSelectedRow));
+    }
+  };
+
   return (
     <GeneralLayout>
       <div className="ZoomUI">
-        <h1 className="ZoomUI--Header">Calendar Data </h1>
-        <Button
-          variant="contained"
-          onClick={(e) => {
-            handleCreateMeeting(e);
-          }}
-        >
-          Create Meeting
-        </Button>
+        {/* <h1 className="ZoomUI--Header">Calendar Data </h1> */}
+        <div className="ZoomUI--BtnBox">
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              handleBotMeetingJoin(e);
+            }}
+            sx={{ marginBottom: "10px" }}
+            disabled={tempSelectedRow.length <= 0}
+          >
+            Submit Bot meeting
+          </Button>
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              handleCreateMeeting(e);
+            }}
+            sx={{ marginBottom: "10px" }}
+          >
+            Create Meeting
+          </Button>
+        </div>
         <Box sx={{ height: 500, width: "100%" }}>
           {FinalCalendarData?.length <= 0 &&
           FinalCalendarData != [] &&
@@ -260,15 +336,19 @@ const ZoomEvent = () => {
             </div>
           ) : (
             <DataGrid
-              // rows={formateData(FinalCalendarData)}
-              rows={rows}
+              rows={formateData(FinalCalendarData)}
+              // rows={rows}
               columns={columns}
               pstartTimeSize={5}
               rowsPerPstartTimeOptions={[5]}
-              checkboxSelection
               disableSelectionOnClick
               experimentalFeatures={{ newEditingApi: true }}
               onSelectionModelChange={handleSelectedRow}
+              isRowSelectable={(params) =>
+                params.row.meetingStatus !== "cancelled" && !params.row.botStatus  
+              }
+              checkboxSelection
+
               // onRowClick={(data) => {
               //   handleMeetingUrl(data);
               // }}

@@ -109,6 +109,7 @@ export const filterMeetingData = createAsyncThunk(
         "filter_meeting Api response",
         response?.data?.data?.response?.data
       );
+      thunkAPI.dispatch(FinalCalendarDataAction())
 
       return response?.data?.data?.response?.data;
     } catch (error) {

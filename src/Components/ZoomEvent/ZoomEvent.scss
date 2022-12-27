@@ -3,4 +3,10 @@
     &--Header{
         text-align: center;
     }
+    &--BtnBox{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    
+    }
 }

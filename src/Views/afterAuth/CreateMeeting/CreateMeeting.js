@@ -54,6 +54,7 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
 
     setCreateMeetingData({...CreateMeetingData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate),participents:tempEmailList})
     dispatch(createMeetingAction({...CreateMeetingData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate),participents:tempEmailList}));
+    setCreateMeetingModal(false)
   };
 
   function handleSelecetedTags(items) {

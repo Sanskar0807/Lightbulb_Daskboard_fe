@@ -82,7 +82,7 @@ const MultiEmailInput = ({emailList, setEmailList}) => {
       <input
         className={"input " + (error && " has-error")}
         value={value}
-        placeholder="email addresses and press `Enter`..."
+        placeholder="Add Attendies Email and press `Enter`..."
         onKeyDown={handleKeyDown}
         onChange={handleChange}
         onPaste={handlePaste}

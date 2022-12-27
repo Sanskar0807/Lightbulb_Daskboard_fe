@@ -6,6 +6,7 @@ import editIcon from "../../../Assets/images/edit.png";
 import deleteIcon from "../../../Assets/images/waste.png";
 import { width } from "@mui/system";
 import EditMeeting from "../EditMeeting/EditMeeting";
+import crossIcon from "../../../Assets/images/crossIcon.png";
 
 const MeetingURl = () => {
   const columns = [
@@ -26,35 +27,59 @@ const MeetingURl = () => {
       editable: true,
       valueGetter: handleOpenVideo,
       renderCell: () => (
-        <strong>
-          <Button
-            variant="contained"
-            size="small"
-            style={{ marginLeft: 16 }}
-            onClick={handleOpenVideo}
-          >
-            Open Video
-          </Button>
-        </strong>
-      ),
-    },
-    {
-      field: "update",
-      headerName: " ",
-      width: 100,
-      // valueGetter: handleOpenVideo,
-      renderCell: () => (
         <>
-          <img
-            src={editIcon}
-            style={{ width: "30px", marginRight: "4px", cursor: "pointer" }}
-            onClick={handleEditClick}
-          />
-          <img
-            src={deleteIcon}
-            style={{ width: "30px", cursor: "pointer" }}
-            onClick={handleDeleteClick}
-          />
+          <Modal
+            open={modalToggle}
+            onClose={modalToggle}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                backgroundColor: "white",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={crossIcon}
+                style={{
+                  width: "25px",
+                  position: "absolute",
+                  right: "10px",
+                  top: "1rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setModalToggle(false);
+                }}
+              />
+              <video width="50%" height="500" controls>
+                <source
+                  src="https://aws-test-bucket-dec.s3.ap-south-1.amazonaws.com/2test"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+          </Modal>
+          <strong>
+            <Button
+              variant="contained"
+              size="small"
+              style={{ marginLeft: 16 }}
+              onClick={handleModalOpen}
+            >
+              Open Video
+            </Button>
+          </strong>
         </>
       ),
     },
@@ -94,9 +119,9 @@ const MeetingURl = () => {
     },
   ];
 
-const [modalToggle, setModalToggle] = useState(false)
-  const handleEditClick = () => {
-    setModalToggle(true)
+  const [modalToggle, setModalToggle] = useState(false);
+  const handleModalOpen = () => {
+    setModalToggle(true);
   };
   const handleDeleteClick = () => {};
   const handleOpenVideo = (row) => {
@@ -136,15 +161,6 @@ const [modalToggle, setModalToggle] = useState(false)
           />
         </video> */}
       </GeneralLayout>
-      <Modal
-        open={modalToggle}
-        onClose={modalToggle}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-        sx={{display:"flex",justifyContent:"center",alignItems:"center"}}
-      >
-        <EditMeeting setModalToggle={setModalToggle}/>
-      </Modal>
     </div>
   );
 };

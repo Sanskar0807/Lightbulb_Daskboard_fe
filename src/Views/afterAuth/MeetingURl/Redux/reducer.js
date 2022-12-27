@@ -14,10 +14,10 @@ const initialState = {
 
 // get video 
 export const getVideoAction = createAsyncThunk(
-  "/CalendarData",
+  "/getVideoLink",
   async (_, thunkAPI) => {
     try {
-      console.log(" final CalendarData Action");
+      console.log(" getVideoLink Action");
       const { data } = await services.get(
         "meeting/get_calendar",
         {

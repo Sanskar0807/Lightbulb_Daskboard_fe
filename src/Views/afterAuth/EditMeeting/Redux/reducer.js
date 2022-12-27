@@ -21,7 +21,7 @@ export const editMeetingAction = createAsyncThunk(
   "/editMeeting",
   async (payload, thunkAPI) => {
     try {
-      console.log("editMeetingAction action call", data);
+      console.log("editMeetingAction action call", payload);
 
       const { data } = await services.put(
         "meeting/reschedule_meeting",
@@ -34,6 +34,8 @@ export const editMeetingAction = createAsyncThunk(
         }
       );
       console.log("editMeetingAction reponse", data);
+      thunkAPI.dispatch(FinalCalendarDataAction())
+
 
       return data;
     } catch (error) {
