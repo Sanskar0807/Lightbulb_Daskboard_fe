@@ -89,8 +89,10 @@ const ZoomEvent = () => {
       width: 300,
       renderCell: (params) => (
         <>
-          {(params.row.meetingStatus == "cancelled") || (params.row.botStatus )  ? (
-            <p /* style={{textDecoration: "line-through" }} */>{params?.value}</p>
+          {params.row.meetingStatus == "cancelled" || params.row.botStatus ? (
+            <p /* style={{textDecoration: "line-through" }} */>
+              {params?.value}
+            </p>
           ) : (
             <Link
               to={`/form/${params.value}`}
@@ -145,7 +147,7 @@ const ZoomEvent = () => {
           sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
           color={`success`}
         >
-          {row.botStatus?"Bot Join":"Manual"}
+          {row.botStatus ? "Bot Join" : "Manual"}
         </Button>
       ),
     },
@@ -262,16 +264,28 @@ const ZoomEvent = () => {
   useEffect(() => {
     dispatch(FinalCalendarDataAction());
   }, [dispatch]);
-  console.log(tempSelectedRow);
+  console.log("nothing", tempSelectedRow);
+
+
+
+  const checkDuplicateEventId = (data)=>{
+    let newSelectedArray = data.filter((e, i, a) => a.indexOf(e) === i)
+    console.log("dekh formate data",newSelectedArray);
+    return newSelectedArray
+  }
 
   const handleSelectedRow = (row) => {
     for (let i = 0; i < FinalCalendarData.length; i++) {
       for (let j = 0; j < row.length; j++) {
         if (FinalCalendarData[i].meetingUrl == row[j]) {
+          
           setTempSelectedRow([
             ...tempSelectedRow,
             FinalCalendarData[i].meetingId,
           ]);
+        }
+        else{
+
         }
       }
     }
@@ -286,6 +300,8 @@ const ZoomEvent = () => {
     }
   };
 
+  
+
   const handleMeetingUrl = (row) => {
     setRowData(row.row);
     // if (row.row.id) {
@@ -298,7 +314,8 @@ const ZoomEvent = () => {
 
   const handleBotMeetingJoin = () => {
     if (tempSelectedRow.length > 0) {
-      dispatch(filterMeetingData(tempSelectedRow));
+
+      dispatch(filterMeetingData(checkDuplicateEventId(tempSelectedRow)));
     }
   };
 
@@ -345,7 +362,8 @@ const ZoomEvent = () => {
               experimentalFeatures={{ newEditingApi: true }}
               onSelectionModelChange={handleSelectedRow}
               isRowSelectable={(params) =>
-                params.row.meetingStatus !== "cancelled" && !params.row.botStatus  
+                params.row.meetingStatus !== "cancelled" &&
+                !params.row.botStatus
               }
               checkboxSelection
 

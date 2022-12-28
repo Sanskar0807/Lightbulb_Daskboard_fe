@@ -265,7 +265,13 @@ export const PlatformSlice = createSlice({
     builder.addCase(FinalCalendarDataAction.fulfilled, (state, action) => {
       state.FinalCalendarLoading = "succeeded";
       console.log("chal bhai",action.payload);
-      state.FinalCalendarData = action.payload;
+      if(action.payload==null || action.payload==""){
+        state.FinalCalendarData=[];
+      }
+      else{
+        state.FinalCalendarData = action.payload;
+      }
+  
     });
     builder.addCase(FinalCalendarDataAction.rejected, (state, action) => {
       state.FinalCalendarData = [];

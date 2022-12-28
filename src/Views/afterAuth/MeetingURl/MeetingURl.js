@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Modal } from "@mui/material";
+import { Box, Button, CircularProgress, Link, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import GeneralLayout from "../../../Layout/GeneralLayout";
@@ -7,6 +7,9 @@ import deleteIcon from "../../../Assets/images/waste.png";
 import { width } from "@mui/system";
 import EditMeeting from "../EditMeeting/EditMeeting";
 import crossIcon from "../../../Assets/images/crossIcon.png";
+import { useDispatch, useSelector } from "react-redux";
+import { formateData } from "../../../utils/Helper";
+import { FinalCalendarDataAction } from "../PlatformLogin/Redux/reducer";
 
 const MeetingURl = () => {
   const columns = [
@@ -15,10 +18,12 @@ const MeetingURl = () => {
       headerName: "ROW",
       width: 100,
     },
+    { field: "meetingTitle", headerName: "MEETING TITLE", width: 150 },
     {
       field: "organizer",
       headerName: "ORGANIZER",
       width: 200,
+      editable: true,
     },
     {
       field: "videoUrl",
@@ -77,11 +82,140 @@ const MeetingURl = () => {
               style={{ marginLeft: 16 }}
               onClick={handleModalOpen}
             >
-              Open Video
+              Play Video
             </Button>
           </strong>
         </>
       ),
+    },
+  ];
+  const Newcolumns = [
+    { field: "meetingTitle", headerName: "Meeting Title", width: 150 },
+    {
+      field: "organizer",
+      headerName: "Organizer",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "id",
+      headerName: "Videos Url",
+      width: 200,
+      renderCell: () => (
+        <>
+          <Modal
+            open={modalToggle}
+            onClose={modalToggle}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                backgroundColor: "white",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={crossIcon}
+                style={{
+                  width: "25px",
+                  position: "absolute",
+                  right: "10px",
+                  top: "1rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setModalToggle(false);
+                }}
+              />
+              <video width="50%" height="500" controls>
+                <source
+                  src="https://aws-test-bucket-dec.s3.ap-south-1.amazonaws.com/2test"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+          </Modal>
+          <strong>
+            <Button
+              variant="contained"
+              size="small"
+              style={{ marginLeft: 16 }}
+              onClick={handleModalOpen}
+            >
+              Play Video
+            </Button>
+          </strong>
+        </>
+      ),
+    },
+    {
+      field: "plateform",
+      headerName: "Plateform",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "meetingStatus",
+      headerName: "Status",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
+          color={`${
+            params?.value == "cancelled"
+              ? "error"
+              : params?.value == "upComing"
+              ? "warning"
+              : "success"
+          }`}
+        >
+          {params?.value == "cancelled"
+            ? "cancelled"
+            : params?.value == "upComing"
+            ? "upComing"
+            : params?.value == "updated"
+            ? "Rescheduled"
+            : "pending"}
+        </Button>
+      ),
+    },
+    {
+      field: "botStatus",
+      headerName: "Bot Status",
+      width: 200,
+      renderCell: ({ row }) => (
+        <Button
+          variant="contained"
+          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
+          color={`success`}
+        >
+          {row.botStatus ? "Bot Join" : "Manual"}
+        </Button>
+      ),
+    },
+    {
+      field: "startTime",
+      headerName: "Start Time",
+      width: 250,
+      editable: true,
+    },
+    {
+      field: "endTime",
+      headerName: "End Time",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 250,
     },
   ];
   const rows = [
@@ -118,6 +252,12 @@ const MeetingURl = () => {
       videoUrl: "https://meet.google.com/pav-vgjk-xaf",
     },
   ];
+  const {
+    FinalCalendarData
+  } = useSelector((state) => state.platform);
+  const dispatch = useDispatch();
+
+
 
   const [modalToggle, setModalToggle] = useState(false);
   const handleModalOpen = () => {
@@ -127,6 +267,9 @@ const MeetingURl = () => {
   const handleOpenVideo = (row) => {
     console.log(row);
   };
+  useEffect(() => {
+    dispatch(FinalCalendarDataAction());
+  }, [dispatch]);
   return (
     <div className="MeetingURl">
       <GeneralLayout>
@@ -136,23 +279,30 @@ const MeetingURl = () => {
           Sync
         </Button> */}
           <Box sx={{ height: 500, width: "100%" }}>
-            {false ? (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
-              </div>
-            ) : (
-              <DataGrid
-                // rows={formateData(FinalCalendarData)}
-                rows={rows}
-                columns={columns}
-                pstartTimeSize={5}
-                rowsPerPstartTimeOptions={[5]}
-                checkboxSelection
-                disableSelectionOnClick
-                experimentalFeatures={{ newEditingApi: true }}
-              />
-            )}
-          </Box>
+          {FinalCalendarData?.length <= 0 &&
+          FinalCalendarData != [] &&
+          FinalCalendarData != "" ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <DataGrid
+              rows={formateData(FinalCalendarData)}
+              // rows={rows}
+              columns={Newcolumns}
+              pstartTimeSize={5}
+              rowsPerPstartTimeOptions={[5]}
+              disableSelectionOnClick
+              experimentalFeatures={{ newEditingApi: true }}
+              // onSelectionModelChange={handleSelectedRow}
+              
+
+              // onRowClick={(data) => {
+              //   handleMeetingUrl(data);
+              // }}
+            />
+          )}
+        </Box>
         </div>
         {/* <video width="100%" height="500" controls>
           <source

@@ -55,7 +55,7 @@ const GeneralLayout = ({ children,}) => {
                 xs={12}
                 sx={{ display: "flex", justifyContent: "center" }}
               >
-                <Button  sx={{width:"100%",backgroundColor:`${window.location.pathname=='/video'?'black':'rgb(40, 40, 40)'}`,color:"white"}} onClick={handleMeetingVideo} >Recorded Videos</Button>
+                <Button  sx={{width:"100%",backgroundColor:`${window.location.pathname=='/video'?'black':'rgb(40, 40, 40)'}`,color:"white"}} onClick={handleMeetingVideo} >Passed Meetings</Button>
               </Grid>
             </Grid>
           </div>
