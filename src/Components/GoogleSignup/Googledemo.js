@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Pathname } from "../../Pathname";
 import {
-  GetCalendarData,
+  
   signupWithGoogle,
 } from "../../Views/afterAuth/PlatformLogin/Redux/reducer";
 
