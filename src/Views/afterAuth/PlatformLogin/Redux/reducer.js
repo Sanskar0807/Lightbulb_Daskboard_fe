@@ -25,57 +25,6 @@ const initialState = {
   Get_GoogleCodeResponse: "",
   FinalCalendarData: [],
 };
-const rows = [
-  {
-    id: 1,
-    meetingId: "o9breh0o57k66tqvhiqi6l2808",
-    organizer: "sumit.kumar.antino@gmail.com",
-    startTime: "2022-12-10T21:30:00+05:30",
-    endTime: "2022-12-11T06:30:00+05:30",
-    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
-  },
-  {
-    id: 2,
-    meetingId: "31u0b6vhmiscot2rlm9thee8oc",
-    organizer: "rohan.antino@gmail.com",
-    startTime: "2022-12-10T21:30:00+05:30",
-    endTime: "2022-12-11T06:30:00+05:30",
-    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
-  },
-  {
-    id: 3,
-    meetingId: "723fn06381pfoe0seiftkc4ebn",
-    organizer: "pram.antino@gmail.com",
-    startTime: "2022-12-10T21:30:00+05:30",
-    endTime: "2022-12-11T06:30:00+05:30",
-    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
-  },
-  {
-    id: 4,
-    meetingId: "50lmq1se43hrqnehuobsuo6ucd",
-    organizer: "piyush.antino@gmail.com",
-    startTime: "2022-12-10T21:30:00+05:30",
-    endTime: "2022-12-11T06:30:00+05:30",
-    meetingUrl: "https://meet.google.com/pav-vgjk-xaf",
-  },
-];
-//SIGNUP
-
-export const GetCalendarData = createAsyncThunk(
-  "/google_token",
-  async (payload, thunkAPI) => {
-    console.log("sanskar", payload);
-    const response = await axios.get(
-      "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-      {
-        headers: {
-          Authorization: `Bearer ${payload}`,
-        },
-      }
-    );
-    return response?.data;
-  }
-);
 
 export const signupWithGoogle = createAsyncThunk(
   "/google_signin",
@@ -182,22 +131,7 @@ export const PlatformSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(GetCalendarData.pending, (state) => {
-      state.googleTokenloading = "pending";
-    });
-    builder.addCase(GetCalendarData.fulfilled, (state, action) => {
-      state.googleTokenloading = "succeeded";
-      state.calendarData = action.payload;
-      console.log("Fullfilled", action?.payload);
-      state.error = "";
-    });
-    builder.addCase(GetCalendarData.rejected, (state, action) => {
-      state.googleTokenloading = "fail";
-      state.error = action.payload;
-      // toast.error("Google Get Calendar Data Api is not Working", {
-      //   position: toast.POSITION.TOP_RIGHT,
-      // });
-    });
+    
     builder.addCase(signupWithGoogle.pending, (state) => {
       state.googleSignupLoading = "pending";
     });
