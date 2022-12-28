@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
-import "./Signup.css";
+import "./SignUp.css";
 
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from "@mui/material/Typography";
