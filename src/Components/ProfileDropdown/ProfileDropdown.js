@@ -29,6 +29,7 @@ export default function AccountMenu() {
   };
   const handleLogout =()=>{
     dispatch(logout());
+    navigate(Pathname.LOGIN)
 
   }
   return (

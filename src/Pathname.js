@@ -7,6 +7,7 @@ export let Pathname = {
 	ZOOM: '/zoom',
 	UPDATEPROFILE: '/profile',
 	DASHBOARD: '/dashboard',
+	VIDEOS: '/video',
 	DASHBOARD_ORDERS: '/dashboard/orders',
 	DASHBOARD_TRANSACTIONS: '/dashboard/transactions',
 	COMPONENTS: '/components'

@@ -5,16 +5,20 @@ import GeneralLayout from "../../../Layout/GeneralLayout";
 import Googledemo from "../../../Components/GoogleSignup/Googledemo";
 import Box from "@mui/material/Box";
 import { isMobileOnly } from "react-device-detect";
-import { FinalCalendarData, Get_Url, set_GoogleCode } from "./Redux/reducer";
+import {
+  FinalCalendarData,
+  FinalCalendarDataAction,
+  Get_Url,
+  set_GoogleCode,
+} from "./Redux/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Pathname } from "../../../Pathname";
 
 const PlatformLogin = () => {
   const [searchParams] = useSearchParams();
-  const { Get_GoogleCodeResponse, Get_UrlLink, Get_UrlCode,isUserFirstTime } = useSelector(
-    (state) => state.platform
-  );
+  const { Get_GoogleCodeResponse, Get_UrlLink, Get_UrlCode, isUserFirstTime } =
+    useSelector((state) => state.platform);
   const navigate = useNavigate();
   const [IntergationClick, setIntergationClick] = useState(1);
   const [ParamsCode, setParamsCode] = useState("");
@@ -36,12 +40,16 @@ const PlatformLogin = () => {
   }, []);
 
   useEffect(() => {
+    if (!isUserFirstTime) {
+      navigate(Pathname.ZOOM);
+    }
+  }, [isUserFirstTime]);
+
+  useEffect(() => {
     if (Get_GoogleCodeResponse) {
-      dispatch(FinalCalendarData());
+      dispatch(FinalCalendarDataAction());
     }
   }, [Get_GoogleCodeResponse]);
-
- 
 
   const handleSignupWithGoogle = () => {
     window.open(Get_UrlLink, "_self");
