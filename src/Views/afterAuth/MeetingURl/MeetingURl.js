@@ -10,6 +10,7 @@ import crossIcon from "../../../Assets/images/crossIcon.png";
 import { useDispatch, useSelector } from "react-redux";
 import { formateData } from "../../../utils/Helper";
 import { FinalCalendarDataAction } from "../PlatformLogin/Redux/reducer";
+import { getVideoAction } from "./Redux/reducer";
 
 const MeetingURl = () => {
   const columns = [
@@ -89,6 +90,7 @@ const MeetingURl = () => {
       ),
     },
   ];
+  
   const Newcolumns = [
     { field: "meetingTitle", headerName: "Meeting Title", width: 150 },
     {
@@ -255,6 +257,9 @@ const MeetingURl = () => {
   const {
     FinalCalendarData
   } = useSelector((state) => state.platform);
+  const {
+    getVideoMeeting
+  } = useSelector((state) => state.video);
   const dispatch = useDispatch();
 
 
@@ -269,12 +274,15 @@ const MeetingURl = () => {
   };
   useEffect(() => {
     dispatch(FinalCalendarDataAction());
+    dispatch(getVideoAction());
   }, [dispatch]);
+
+  
   return (
     <div className="MeetingURl">
       <GeneralLayout>
         <div className="ZoomUI">
-          <h1 className="ZoomUI--Header">Videos Link</h1>
+          <h1 className="ZoomUI--Header" >Videos Link</h1>
           {/* <Button variant="contained" onClick={(e)=>{handleSync(e)}}>
           Sync
         </Button> */}
@@ -287,7 +295,7 @@ const MeetingURl = () => {
             </div>
           ) : (
             <DataGrid
-              rows={formateData(FinalCalendarData)}
+              rows={formateData(getVideoMeeting)}
               // rows={rows}
               columns={Newcolumns}
               pstartTimeSize={5}

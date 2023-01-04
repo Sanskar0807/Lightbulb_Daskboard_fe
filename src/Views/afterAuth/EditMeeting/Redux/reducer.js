@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import { toast } from "react-toastify";
 import services from "../../../../Common/services";
 import { get_Token } from "../../../../utils/Helper";
@@ -50,8 +51,8 @@ export const deleteMeetingAction = createAsyncThunk(
     try {
       console.log("deleteMeetingAction action call", payload,get_Token());
 
-      const { data } = await services.post(
-        "meeting/delete_meeting",
+      const { data } = await services.post("meeting/delete_meeting",
+      // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/delete_meeting",
         payload,
         {
           headers: {

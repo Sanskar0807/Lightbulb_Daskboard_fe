@@ -23,6 +23,7 @@ const MultiEmailInput = ({emailList, setEmailList}) => {
     setvalue(evt.target.value);
     seterror(null);
   };
+  console.log(value);
   const handleDelete = (item) => {
     setEmailList(emailList.filter((i) => i !== item));
   };

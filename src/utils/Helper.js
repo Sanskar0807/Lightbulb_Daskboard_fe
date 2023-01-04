@@ -1,7 +1,8 @@
 export const formateData = (items) => {
   return items?.map((e) => {
     return {
-      id: e?.meetingUrl,
+      id: (e?.meetingUrl)===null?"":e?.meetingUrl,
+      // meetingLink: e?.meetingUrl,
       organizer: e?.organizer,
       meetingTitle: e?.meetingTitle,
       timeZone: e?.timeZone,

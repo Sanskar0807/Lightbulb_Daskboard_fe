@@ -76,6 +76,7 @@ const rows = [
 
 const ZoomEvent = () => {
   const columns = [
+    // { field: "id", headerName: "MEETING TITLEs", width: 1 },
     { field: "meetingTitle", headerName: "MEETING TITLE", width: 150 },
     {
       field: "organizer",
@@ -254,9 +255,17 @@ const ZoomEvent = () => {
   const handleDeleteClick = (row) => {
     FinalCalendarData?.map((data) => {
       if (data.meetingUrl == row.id) {
-        console.log("Row ID", data);
+        console.log("Row ID", {
+          eventId: data.meetingId,
+          platForm: data.plateform,
+        });
 
-        dispatch(deleteMeetingAction({ eventId: data.meetingId }));
+        dispatch(
+          deleteMeetingAction({
+            meetingId: data.meetingId,
+            platForm: data.plateform == "Zoom Meeting" ? "Google" : "Outlook",
+          })
+        );
       }
     });
   };
@@ -266,26 +275,21 @@ const ZoomEvent = () => {
   }, [dispatch]);
   console.log("nothing", tempSelectedRow);
 
-
-
-  const checkDuplicateEventId = (data)=>{
-    let newSelectedArray = data.filter((e, i, a) => a.indexOf(e) === i)
-    console.log("dekh formate data",newSelectedArray);
-    return newSelectedArray
-  }
+  const checkDuplicateEventId = (data) => {
+    let newSelectedArray = data.filter((e, i, a) => a.indexOf(e) === i);
+    console.log("dekh formate data", newSelectedArray);
+    return newSelectedArray;
+  };
 
   const handleSelectedRow = (row) => {
     for (let i = 0; i < FinalCalendarData.length; i++) {
       for (let j = 0; j < row.length; j++) {
         if (FinalCalendarData[i].meetingUrl == row[j]) {
-          
           setTempSelectedRow([
             ...tempSelectedRow,
             FinalCalendarData[i].meetingId,
           ]);
-        }
-        else{
-
+        } else {
         }
       }
     }
@@ -300,8 +304,6 @@ const ZoomEvent = () => {
     }
   };
 
-  
-
   const handleMeetingUrl = (row) => {
     setRowData(row.row);
     // if (row.row.id) {
@@ -314,8 +316,9 @@ const ZoomEvent = () => {
 
   const handleBotMeetingJoin = () => {
     if (tempSelectedRow.length > 0) {
-
       dispatch(filterMeetingData(checkDuplicateEventId(tempSelectedRow)));
+
+      setTempSelectedRow([]);
     }
   };
 
@@ -354,7 +357,7 @@ const ZoomEvent = () => {
           ) : (
             <DataGrid
               rows={formateData(FinalCalendarData)}
-              // rows={rows}
+              // rows={FinalCalendarData}
               columns={columns}
               pstartTimeSize={5}
               rowsPerPstartTimeOptions={[5]}

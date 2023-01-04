@@ -17,17 +17,22 @@ import "./EditMeeting.scss";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import { useDispatch, useSelector } from "react-redux";
-import { editMeetingAction, getUserDataAction, updateUserAction } from "./Redux/reducer";
+import {
+  editMeetingAction,
+  getUserDataAction,
+  updateUserAction,
+} from "./Redux/reducer";
 import { toast } from "react-toastify";
 import crossIcon from "../../../Assets/images/crossIcon.png";
-import { get_UTCFormateDate } from "../../../utils/Helper";
+import { get_FormatDate, get_UTCFormateDate } from "../../../utils/Helper";
+import SelectDropdown from "../../../Components/SelectDropdown/SelectDropdown";
 // import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 // import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 // import dayjs from "dayjs";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 // import DatePicker from "../../../Components/DatePicker/DatePicker"
 
-const EditMeeting = ({ setModalToggle,RowData}) => {
+const EditMeeting = ({ setModalToggle, RowData }) => {
   const navigate = useNavigate();
   const { FinalCalendarData, updateProfileMsg } = useSelector(
     (state) => state.platform
@@ -36,10 +41,9 @@ const EditMeeting = ({ setModalToggle,RowData}) => {
   const [endDate, setEndDate] = useState(new Date());
   const [UpdateProfileData, setUpdateProfileData] = useState({
     meetingTitle: RowData.meetingTitle,
-    location: "",
-    description: "",
-    eventId:""
+    meetingId: "",
   });
+  const [selectPlateForm, setSelectPlateForm] = useState("");
   console.log(RowData);
   const [TempCountryCode, setTempCountryCode] = useState({
     Code: "",
@@ -56,29 +60,45 @@ const EditMeeting = ({ setModalToggle,RowData}) => {
     }
   }, [updateProfileMsg]);
   useEffect(() => {
-    if(FinalCalendarData){
+    if (FinalCalendarData) {
+      FinalCalendarData?.map((row) => {
+        if (row.meetingUrl == RowData.id) {
 
-      FinalCalendarData?.map((row)=>{
-        if(row.meetingUrl==RowData.id){
-          setUpdateProfileData({...UpdateProfileData,eventId:row.meetingId})
-          setstartDate(row.startTime)
-          setEndDate(row.endTime)
-          console.log(row);
+
+          setUpdateProfileData({
+            ...UpdateProfileData,
+            meetingId: row.meetingId,
+          });
+          setstartDate(new Date(row.startTime));
+          setEndDate(row.endTime);
+          setSelectPlateForm((row.plateform=="Zoom Meeting")?"Google":"Outlook")
+          console.log("row",row);
         }
-      })
+      });
     }
-    
   }, [FinalCalendarData]);
 
   const handleSubmit = (event) => {
-    
     event.preventDefault();
-    console.log({...UpdateProfileData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate)});
-    dispatch(editMeetingAction({...UpdateProfileData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate)}));
+    console.log({
+      ...UpdateProfileData,
+      PlatForm: selectPlateForm,
+      startTime: get_UTCFormateDate(startDate),
+      endTime: get_UTCFormateDate(endDate),
+    });
+    dispatch(
+      editMeetingAction({
+        ...UpdateProfileData,
+        platForm: selectPlateForm,
+        startTime: get_UTCFormateDate(startDate),
+        endTime: get_UTCFormateDate(endDate),
+      })
+    );
     // console.log("final data",UpdateProfileData,startDate,endDate);
-    setModalToggle(false)
-
-
+    setModalToggle(false);
+  };
+  const handleSelect = (event) => {
+    setSelectPlateForm(event.target.value);
   };
 
   const handleCountry = (value, data, event, formattedValue) => {
@@ -106,7 +126,20 @@ const EditMeeting = ({ setModalToggle,RowData}) => {
   return (
     <>
       <div className="EditMeeting--conainer">
-      <img src={crossIcon} onClick={()=>{setModalToggle(false);}} alt="cross" style={{ width: "20px",position:"absolute",top:"15px",right:"20px",cursor:"pointer" }} />
+        <img
+          src={crossIcon}
+          onClick={() => {
+            setModalToggle(false);
+          }}
+          alt="cross"
+          style={{
+            width: "20px",
+            position: "absolute",
+            top: "15px",
+            right: "20px",
+            cursor: "pointer",
+          }}
+        />
         <Box
           sx={{
             marginTop: 0,
@@ -138,7 +171,7 @@ const EditMeeting = ({ setModalToggle,RowData}) => {
                   error={false}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <TextField
                   required
                   fullWidth
@@ -162,7 +195,16 @@ const EditMeeting = ({ setModalToggle,RowData}) => {
                   value={UpdateProfileData.description}
                   onChange={handleUserUpdate}
                 />
+              </Grid> */}
+              <Grid item xs={12}>
+                <SelectDropdown
+                  dropdownData={["Google", "Outlook"]}
+                  handleSelect={handleSelect}
+                  selectState={selectPlateForm}
+                  label={"Select Platform"}
+                />
               </Grid>
+
               <Grid item xs={6}>
                 <TextField
                   id="datetime-local"

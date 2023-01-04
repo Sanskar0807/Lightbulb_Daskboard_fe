@@ -2,9 +2,13 @@ import {
   Avatar,
   Button,
   Checkbox,
+  FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -12,7 +16,7 @@ import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import crossIcon from "../../../Assets/images/crossIcon.png";
 import "./CreateMeeting.scss";
-import MultiEmailInput from "../../../Components/MultiEmailInput/MultiEmailInput"
+import MultiEmailInput from "../../../Components/MultiEmailInput/MultiEmailInput";
 import { get_UTCFormateDate } from "../../../utils/Helper";
 import { createMeetingAction } from "./Redux/reducer";
 import { useDispatch } from "react-redux";
@@ -30,6 +34,11 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
   const [emailList, setEmailList] = useState([]);
   const [startDate, setstartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [selectPlatform, setSelectPlatform] = useState("");
+
+  const handlePlatformChange = (event) => {
+    setSelectPlatform(event.target.value);
+  };
   const handleEditClick = () => {
     setCreateMeetingModal(true);
   };
@@ -43,18 +52,38 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
   const handleSubmit = (event) => {
     // setCreateMeetingModal(false);
     event.preventDefault();
+
     console.log(CreateMeetingData);
-    let tempEmailList = emailList.map((dta)=>{
+    let tempEmailList = emailList.map((dta) => {
       return {
-        email:dta
-      }
-    })
-    console.log({...CreateMeetingData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate),participents:tempEmailList});
+        email: dta,
+      };
+    });
+    console.log({
+      ...CreateMeetingData,
+      platForm: selectPlatform,
+      startTime: get_UTCFormateDate(startDate),
+      endTime: get_UTCFormateDate(endDate),
+      participents: tempEmailList,
+    });
 
-
-    setCreateMeetingData({...CreateMeetingData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate),participents:tempEmailList})
-    dispatch(createMeetingAction({...CreateMeetingData,startTime:get_UTCFormateDate(startDate),endTime:get_UTCFormateDate(endDate),participents:tempEmailList}));
-    setCreateMeetingModal(false)
+    setCreateMeetingData({
+      ...CreateMeetingData,
+      platForm: selectPlatform,
+      startTime: get_UTCFormateDate(startDate),
+      endTime: get_UTCFormateDate(endDate),
+      participents: tempEmailList,
+    });
+    dispatch(
+      createMeetingAction({
+        ...CreateMeetingData,
+        platForm:selectPlatform,
+        startTime: get_UTCFormateDate(startDate),
+        endTime: get_UTCFormateDate(endDate),
+        participents: tempEmailList,
+      })
+    );
+    setCreateMeetingModal(false);
   };
 
   function handleSelecetedTags(items) {
@@ -133,9 +162,27 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
               />
             </Grid>
             <Grid item xs={12}>
-
-              <MultiEmailInput setEmailList={setEmailList} emailList={emailList}/>
-             
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Select Account
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectPlatform}
+                  label="Select Platform"
+                  onChange={handlePlatformChange}
+                >
+                  <MenuItem value={"Google"}>Google</MenuItem>
+                  <MenuItem value={"Outlook"}>Outlook</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <MultiEmailInput
+                setEmailList={setEmailList}
+                emailList={emailList}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextField

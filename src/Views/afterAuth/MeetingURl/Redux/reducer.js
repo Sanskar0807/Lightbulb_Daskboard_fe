@@ -7,7 +7,7 @@ import { get_Token } from "../../../../utils/Helper";
 
 const initialState = {
   getVideoloading: "idle", //"idle", "pending", "succeeded", "fail"
-  videoLink:"",
+  getVideoMeeting:[],
   error:"",
   
 };
@@ -19,7 +19,7 @@ export const getVideoAction = createAsyncThunk(
     try {
       console.log(" getVideoLink Action");
       const { data } = await services.get(
-        "meeting/get_calendar",
+        "meeting/get_downloadMeting",
         {
           headers: {
             "ngrok-skip-browser-warning": true,
@@ -27,6 +27,7 @@ export const getVideoAction = createAsyncThunk(
           },
         }
       );
+      console.log(data?.data?.response?.data);
       return data?.data?.response?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
@@ -44,11 +45,12 @@ export const VideoSlice = createSlice({
     });
     builder.addCase(getVideoAction.fulfilled, (state, action) => {
       state.getVideoloading = "succeeded";
-      state.videoLink = action.payload;
+      state.getVideoMeeting = action.payload;
       state.error = "";
     });
     builder.addCase(getVideoAction.rejected, (state, action) => {
       state.getVideoloading = "fail";
+      state.getVideoMeeting = [];
       state.error = action.payload;
     });
   },
