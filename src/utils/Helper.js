@@ -1,7 +1,8 @@
 export const formateData = (items) => {
   return items?.map((e) => {
     return {
-      id: e?.meetingUrl,
+      id: (e?.meetingUrl)===null?"":e?.meetingUrl,
+      // meetingLink: e?.meetingUrl,
       organizer: e?.organizer,
       meetingTitle: e?.meetingTitle,
       timeZone: e?.timeZone,
@@ -15,7 +16,8 @@ export const formateData = (items) => {
       meetingUrl: e?.meetingTitle,
 
       meetingStatus: e?.meetingStatus,
-      botStatus: e?.botStatus
+      botStatus: e?.botStatus,
+      meetingLink:e?.recMetUrl
 
       // meetingCode: e.conferenceData?.entryPoints[0].meetingCode,
 

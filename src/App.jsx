@@ -21,7 +21,6 @@ const Dashboard = React.lazy(() =>
   import("./Views/afterAuth/Dashboard/Dashboard")
 );
 const Orders = React.lazy(() => import("./Views/afterAuth/Orders/Orders"));
-const Components = React.lazy(() => import("./Views/beforeAuth/Components"));
 const NotFound = React.lazy(() => import("./Views/404"));
 
 export function App() {
@@ -45,8 +44,7 @@ export function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path={Pathname.COMPONENTS} element={<Components />} />
-          <Route path="*" component={NotFound} />
+          <Route path="*" component={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </Suspense>

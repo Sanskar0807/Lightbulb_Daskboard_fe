@@ -10,6 +10,7 @@ import crossIcon from "../../../Assets/images/crossIcon.png";
 import { useDispatch, useSelector } from "react-redux";
 import { formateData } from "../../../utils/Helper";
 import { FinalCalendarDataAction } from "../PlatformLogin/Redux/reducer";
+import { getVideoAction } from "./Redux/reducer";
 
 const MeetingURl = () => {
   const columns = [
@@ -89,6 +90,7 @@ const MeetingURl = () => {
       ),
     },
   ];
+  
   const Newcolumns = [
     { field: "meetingTitle", headerName: "Meeting Title", width: 150 },
     {
@@ -101,7 +103,7 @@ const MeetingURl = () => {
       field: "id",
       headerName: "Videos Url",
       width: 200,
-      renderCell: () => (
+      renderCell: ({row}) => (
         <>
           <Modal
             open={modalToggle}
@@ -138,8 +140,9 @@ const MeetingURl = () => {
                 }}
               />
               <video width="50%" height="500" controls>
+               { console.log(row)}
                 <source
-                  src="https://aws-test-bucket-dec.s3.ap-south-1.amazonaws.com/2test"
+                  src={row?.meetingLink}
                   type="video/mp4"
                 />
               </video>
@@ -172,35 +175,9 @@ const MeetingURl = () => {
         <Button
           variant="contained"
           sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
-          color={`${
-            params?.value == "cancelled"
-              ? "error"
-              : params?.value == "upComing"
-              ? "warning"
-              : "success"
-          }`}
-        >
-          {params?.value == "cancelled"
-            ? "cancelled"
-            : params?.value == "upComing"
-            ? "upComing"
-            : params?.value == "updated"
-            ? "Rescheduled"
-            : "pending"}
-        </Button>
-      ),
-    },
-    {
-      field: "botStatus",
-      headerName: "Bot Status",
-      width: 200,
-      renderCell: ({ row }) => (
-        <Button
-          variant="contained"
-          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
           color={`success`}
         >
-          {row.botStatus ? "Bot Join" : "Manual"}
+          Completed
         </Button>
       ),
     },
@@ -255,6 +232,9 @@ const MeetingURl = () => {
   const {
     FinalCalendarData
   } = useSelector((state) => state.platform);
+  const {
+    getVideoMeeting
+  } = useSelector((state) => state.video);
   const dispatch = useDispatch();
 
 
@@ -269,12 +249,15 @@ const MeetingURl = () => {
   };
   useEffect(() => {
     dispatch(FinalCalendarDataAction());
+    dispatch(getVideoAction());
   }, [dispatch]);
+
+  
   return (
     <div className="MeetingURl">
       <GeneralLayout>
         <div className="ZoomUI">
-          <h1 className="ZoomUI--Header">Videos Link</h1>
+          <h1 className="ZoomUI--Header" >Videos Link</h1>
           {/* <Button variant="contained" onClick={(e)=>{handleSync(e)}}>
           Sync
         </Button> */}
@@ -287,7 +270,7 @@ const MeetingURl = () => {
             </div>
           ) : (
             <DataGrid
-              rows={formateData(FinalCalendarData)}
+              rows={formateData(getVideoMeeting)}
               // rows={rows}
               columns={Newcolumns}
               pstartTimeSize={5}

@@ -12,6 +12,8 @@ const initialState = {
   filterMeetingLoading: "idle", //"idle", "pending", "succeeded", "fail"
   Get_UrlLoading: "idle", //"idle", "pending", "succeeded", "fail"
   set_CodeLoading: "idle", //"idle", "pending", "succeeded", "fail"
+  Get_UrlOutlookLoading: "idle", //"idle", "pending", "succeeded", "fail"
+  set_CodeOutLookLoading: "idle", //"idle", "pending", "succeeded", "fail"
   FinalCalendarLoading: "idle", //"idle", "pending", "succeeded", "fail"
 
   error: "",
@@ -22,6 +24,8 @@ const initialState = {
   filterData: [],
   Get_UrlLink: "",
   Get_UrlCode: "",
+  Get_UrlOutlookLink: "",
+  Get_UrlOutlookCode: "",
   Get_GoogleCodeResponse: "",
   FinalCalendarData: [],
 };
@@ -58,7 +62,7 @@ export const filterMeetingData = createAsyncThunk(
         "filter_meeting Api response",
         response?.data?.data?.response?.data
       );
-      thunkAPI.dispatch(FinalCalendarDataAction())
+      thunkAPI.dispatch(FinalCalendarDataAction());
 
       return response?.data?.data?.response?.data;
     } catch (error) {
@@ -66,7 +70,7 @@ export const filterMeetingData = createAsyncThunk(
     }
   }
 );
-//get_url
+//get_url by google
 export const Get_Url = createAsyncThunk("/get_url", async (_, thunkAPI) => {
   try {
     const { data } = await services.get("meeting/get_url", {
@@ -106,19 +110,60 @@ export const set_GoogleCode = createAsyncThunk(
     }
   }
 );
-// CalendarData
-export const FinalCalendarDataAction = createAsyncThunk(
-  "/CalendarData",
+
+//get_url by google
+export const Get_UrlOutlook = createAsyncThunk(
+  "/get_urlOutlook",
   async (_, thunkAPI) => {
     try {
-      console.log(" final CalendarData Action");
-      const { data } = await services.get("meeting/get_calendar", {
+      const { data } = await services.get("authReq", {
+        // const { data } = await axios.get("https://147d-49-249-44-114.in.ngrok.io//authReq", {
         headers: {
           "ngrok-skip-browser-warning": true,
           Authorization: `Bearer ${get_Token()}`,
         },
       });
-      console.log("get calendar data",data?.data?.response?.data);
+      console.log("Get_UrlOutlook",data);
+      return data?.Data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+// after comming code from google Consent
+export const set_OutlookCode = createAsyncThunk(
+  "/set_codeOutlook",
+  async (payload, thunkAPI) => {
+    try {
+      // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/auth",
+      const { data } = await services.post("auth",
+        { code: payload },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": true,
+            Authorization: `Bearer ${get_Token()}`,
+          },
+        }
+      );
+
+      return data?.data?.response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+// Get all Outlook + Calendar Data 
+export const FinalCalendarDataAction = createAsyncThunk(
+  "/CalendarData",
+  async (_, thunkAPI) => {
+    try {
+      // const { data } = await axios.get("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/get_calendar", {
+        const { data } = await services.get("meeting/get_calendar", {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          Authorization: `Bearer ${get_Token()}`,
+        },
+      });
       return data?.data?.response?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
@@ -131,7 +176,6 @@ export const PlatformSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    
     builder.addCase(signupWithGoogle.pending, (state) => {
       state.googleSignupLoading = "pending";
     });
@@ -139,9 +183,6 @@ export const PlatformSlice = createSlice({
       console.log("hero ho tum", action);
       state.googleSignupLoading = "succeeded";
       state.google_token = action;
-      // toast.success("Success fetch from calendar",{position:toast.POSITION.TOP_RIGHT})
-
-      // state.error = "";
     });
     builder.addCase(signupWithGoogle.rejected, (state, action) => {
       state.googleSignupLoading = "fail";
@@ -178,18 +219,28 @@ export const PlatformSlice = createSlice({
     builder.addCase(Get_Url.rejected, (state, action) => {
       state.Get_UrlLoading = "fail";
     });
+    //get_UrlOutlook
+    builder.addCase(Get_UrlOutlook.pending, (state) => {
+      state.Get_UrlOutlookLoading = "pending";
+    });
+    builder.addCase(Get_UrlOutlook.fulfilled, (state, action) => {
+      console.log("action", action);
+      state.Get_UrlOutlookLink = action.payload;
+      state.Get_UrlOutlookLoading = "succeeded";
+    });
+    builder.addCase(Get_UrlOutlook.rejected, (state, action) => {
+      state.Get_UrlOutlookLoading = "fail";
+    });
 
-    // set_GoogleCode
-    builder.addCase(set_GoogleCode.pending, (state) => {
-      state.set_CodeLoading = "pending";
+    // set_OutlookCode
+    builder.addCase(set_OutlookCode.pending, (state) => {
+      state.set_CodeOutLookLoading = "pending";
     });
-    builder.addCase(set_GoogleCode.fulfilled, (state, action) => {
-      state.set_CodeLoading = "succeeded";
-      state.Get_GoogleCodeResponse = action.payload?.status;
-      state.isUserFirstTime = action.payload?.isUserFirstTime;
+    builder.addCase(set_OutlookCode.fulfilled, (state, action) => {
+      state.set_CodeOutLookLoading = "succeeded";
     });
-    builder.addCase(set_GoogleCode.rejected, (state, action) => {
-      state.set_CodeLoading = "fail";
+    builder.addCase(set_OutlookCode.rejected, (state, action) => {
+      state.set_CodeOutLookLoading = "fail";
     });
 
     //FinalCalendarData
@@ -198,14 +249,12 @@ export const PlatformSlice = createSlice({
     });
     builder.addCase(FinalCalendarDataAction.fulfilled, (state, action) => {
       state.FinalCalendarLoading = "succeeded";
-      console.log("chal bhai",action.payload);
-      if(action.payload==null || action.payload==""){
-        state.FinalCalendarData=[];
-      }
-      else{
+      console.log("chal bhai", action.payload);
+      if (action.payload == null || action.payload == "") {
+        state.FinalCalendarData = [];
+      } else {
         state.FinalCalendarData = action.payload;
       }
-  
     });
     builder.addCase(FinalCalendarDataAction.rejected, (state, action) => {
       state.FinalCalendarData = [];

@@ -11,6 +11,7 @@ import forgetReducer from "../Views/beforeAuth/ForgetPassword/Redux/reducer"
 import userUpdateReducer from "../Views/afterAuth/UpdateProfile/Redux/reducer"
 import editMeetingReducer from "../Views/afterAuth/EditMeeting/Redux/reducer"
 import createMeetingReducer from "../Views/afterAuth/CreateMeeting/Redux/reducer"
+import videoReducer from "../Views/afterAuth/MeetingURl/Redux/reducer"
 
 
 export const rootReducer = {
@@ -22,6 +23,7 @@ export const rootReducer = {
 	createMeeting:createMeetingReducer,
 	userUpdate:userUpdateReducer,
 	editMeeting:editMeetingReducer,
+	video:videoReducer,
 	dashboard: dashboardSlice.reducer,
 	platform:platformReducer
 };
