@@ -16,7 +16,8 @@ export const formateData = (items) => {
       meetingUrl: e?.meetingTitle,
 
       meetingStatus: e?.meetingStatus,
-      botStatus: e?.botStatus
+      botStatus: e?.botStatus,
+      meetingLink:e?.recMetUrl
 
       // meetingCode: e.conferenceData?.entryPoints[0].meetingCode,
 

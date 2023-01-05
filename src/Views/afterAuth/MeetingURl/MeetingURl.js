@@ -103,7 +103,7 @@ const MeetingURl = () => {
       field: "id",
       headerName: "Videos Url",
       width: 200,
-      renderCell: () => (
+      renderCell: ({row}) => (
         <>
           <Modal
             open={modalToggle}
@@ -140,8 +140,9 @@ const MeetingURl = () => {
                 }}
               />
               <video width="50%" height="500" controls>
+               { console.log(row)}
                 <source
-                  src="https://aws-test-bucket-dec.s3.ap-south-1.amazonaws.com/2test"
+                  src={row?.meetingLink}
                   type="video/mp4"
                 />
               </video>
@@ -174,35 +175,9 @@ const MeetingURl = () => {
         <Button
           variant="contained"
           sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
-          color={`${
-            params?.value == "cancelled"
-              ? "error"
-              : params?.value == "upComing"
-              ? "warning"
-              : "success"
-          }`}
-        >
-          {params?.value == "cancelled"
-            ? "cancelled"
-            : params?.value == "upComing"
-            ? "upComing"
-            : params?.value == "updated"
-            ? "Rescheduled"
-            : "pending"}
-        </Button>
-      ),
-    },
-    {
-      field: "botStatus",
-      headerName: "Bot Status",
-      width: 200,
-      renderCell: ({ row }) => (
-        <Button
-          variant="contained"
-          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
           color={`success`}
         >
-          {row.botStatus ? "Bot Join" : "Manual"}
+          Completed
         </Button>
       ),
     },

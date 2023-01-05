@@ -31,6 +31,9 @@ import SelectDropdown from "../../../Components/SelectDropdown/SelectDropdown";
 // import dayjs from "dayjs";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 // import DatePicker from "../../../Components/DatePicker/DatePicker"
+import Flatpickr from "react-flatpickr";
+// import "flatpickr/dist/themes/material_green.css";
+import '../../../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const EditMeeting = ({ setModalToggle, RowData }) => {
   const navigate = useNavigate();
@@ -49,6 +52,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
     Code: "",
     number: "",
   });
+  const [TempDate, setTempDate] = useState("2023-01-05T11:15:00.000Z");
   const dispatch = useDispatch();
   useEffect(() => {
     // dispatch(getUserDataAction());
@@ -63,16 +67,17 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
     if (FinalCalendarData) {
       FinalCalendarData?.map((row) => {
         if (row.meetingUrl == RowData.id) {
-
-
           setUpdateProfileData({
             ...UpdateProfileData,
             meetingId: row.meetingId,
           });
-          setstartDate(new Date(row.startTime));
+          setstartDate(row.startTime);
           setEndDate(row.endTime);
-          setSelectPlateForm((row.plateform=="Zoom Meeting")?"Google":"Outlook")
-          console.log("row",row);
+          setTempDate(row.startTime)
+          setSelectPlateForm(
+            row.plateform == "Zoom Meeting" ? "Google" : "Outlook"
+          );
+          console.log("row", row);
         }
       });
     }
@@ -171,6 +176,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                   error={false}
                 />
               </Grid>
+              
               {/* <Grid item xs={12} sm={12}>
                 <TextField
                   required
@@ -211,6 +217,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                   label="Start Date"
                   type="datetime-local"
                   defaultValue={startDate}
+                  value={startDate}
                   sx={{ width: "100%" }}
                   InputLabelProps={{
                     shrink: true,
@@ -226,12 +233,24 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                   label="End Date"
                   type="datetime-local"
                   defaultValue={endDate}
+                  value={endDate}
                   sx={{ width: "100%" }}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   onChange={(e) => {
                     setEndDate(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Flatpickr
+                  data-enable-time
+                  value={TempDate}
+                  options={{ allowInput: true }}
+                  position ={"right"}
+                  onChange={(date) => {
+                    setTempDate(date);
                   }}
                 />
               </Grid>

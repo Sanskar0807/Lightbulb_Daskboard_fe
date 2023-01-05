@@ -88,7 +88,7 @@ const GeneralLayout = ({ children }) => {
                   }}
                   onClick={handleMeetingVideo}
                 >
-                  Passed Meetings
+                  Pasted Meetings
                 </Button>
               </Grid>
             </Grid>
