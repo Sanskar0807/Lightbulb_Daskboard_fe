@@ -31,9 +31,9 @@ import SelectDropdown from "../../../Components/SelectDropdown/SelectDropdown";
 // import dayjs from "dayjs";
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 // import DatePicker from "../../../Components/DatePicker/DatePicker"
-import Flatpickr from "react-flatpickr";
+// import Flatpickr from "react-flatpickr";
 // import "flatpickr/dist/themes/material_green.css";
-import '../../../../node_modules/flatpickr/dist/flatpickr.min.css';
+// import '../../../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const EditMeeting = ({ setModalToggle, RowData }) => {
   const navigate = useNavigate();
@@ -243,7 +243,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Flatpickr
                   data-enable-time
                   value={TempDate}
@@ -253,7 +253,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                     setTempDate(date);
                   }}
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
 
             <Button
