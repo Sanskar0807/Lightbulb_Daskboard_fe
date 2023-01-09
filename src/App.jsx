@@ -23,6 +23,7 @@ const Dashboard = React.lazy(() =>
 const Orders = React.lazy(() => import("./Views/afterAuth/Orders/Orders"));
 const NotFound = React.lazy(() => import("./Views/404"));
 
+
 export function App() {
   return (
     <Suspense fallback={<Loader />}>

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { toast } from "react-toastify";
 import services from "../../../../Common/services";
 import { get_Token } from "../../../../utils/Helper";
 import { FinalCalendarDataAction } from "../../PlatformLogin/Redux/reducer";
@@ -13,7 +12,7 @@ const initialState = {
   success: false,
   updateProfileMsg: "",
   editMeetingStatus: "",
-  deleteMeetingStatus:"",
+  deleteMeetingMsg:"",
 };
 
 //updateUser
@@ -61,9 +60,9 @@ export const deleteMeetingAction = createAsyncThunk(
           },
         }
       );
-      console.log("deleteMeetingAction reponse", data);
+      console.log("deleteMeetingAction reponse", data?.response?.message);
       thunkAPI.dispatch(FinalCalendarDataAction())
-      return data;
+      return data?.response?.message;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -94,7 +93,7 @@ export const editMeetingSlice = createSlice({
     });
     builder.addCase(deleteMeetingAction.fulfilled, (state, action) => {
       state.DeleteMeetingLoading = "succeeded";
-      state.deleteMeetingStatus = action.payload;
+      state.deleteMeetingMsg = action.payload;
       state.error = "";
     });
     builder.addCase(deleteMeetingAction.rejected, (state, action) => {

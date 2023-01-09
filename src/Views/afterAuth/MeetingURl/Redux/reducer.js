@@ -7,26 +7,22 @@ import { get_Token } from "../../../../utils/Helper";
 
 const initialState = {
   getVideoloading: "idle", //"idle", "pending", "succeeded", "fail"
-  getVideoMeeting:[],
-  error:"",
-  
+  getVideoMeeting: [],
+  error: "",
 };
 
-// get video 
+// get video
 export const getVideoAction = createAsyncThunk(
   "/getVideoLink",
   async (_, thunkAPI) => {
     try {
       console.log(" getVideoLink Action");
-      const { data } = await services.get(
-        "meeting/get_downloadMeting",
-        {
-          headers: {
-            "ngrok-skip-browser-warning": true,
-            Authorization: `Bearer ${get_Token()}`,
-          },
-        }
-      );
+      const { data } = await services.get("meeting/get_downloadMeting", {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          Authorization: `Bearer ${get_Token()}`,
+        },
+      });
       console.log(data?.data?.response?.data);
       return data?.data?.response?.data;
     } catch (error) {
@@ -45,7 +41,11 @@ export const VideoSlice = createSlice({
     });
     builder.addCase(getVideoAction.fulfilled, (state, action) => {
       state.getVideoloading = "succeeded";
-      state.getVideoMeeting = action.payload;
+      if (action.payload == null || action.payload == "") {
+        state.getVideoMeeting = [];
+      } else {
+        state.getVideoMeeting = action.payload;
+      }
       state.error = "";
     });
     builder.addCase(getVideoAction.rejected, (state, action) => {

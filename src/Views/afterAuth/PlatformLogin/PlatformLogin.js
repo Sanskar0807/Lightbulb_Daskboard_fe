@@ -105,7 +105,7 @@ const PlatformLogin = () => {
               }}
             >
               <Grid item xs={12} md={12}>
-                <h1 onClick={tempClick}>Login With Google Account</h1>
+                <h1 onClick={tempClick}>Login Your Account</h1>
                 {/* <Googledemo /> */}
                 {/* </Button> */}
               </Grid>
