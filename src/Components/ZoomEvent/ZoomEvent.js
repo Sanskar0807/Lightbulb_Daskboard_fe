@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, CircularProgress, Link, Modal } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  Modal,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import "./ZoomEvent.scss";
 import GeneralLayout from "../../Layout/GeneralLayout";
@@ -9,13 +17,16 @@ import {
   FinalCalendarDataAction,
   GetCalendarData,
 } from "../../Views/afterAuth/PlatformLogin/Redux/reducer";
-import { formateData } from "../../utils/Helper";
+import { formateData, get_DiffTimeDuration } from "../../utils/Helper";
 import editIcon from "../../Assets/images/edit.png";
 import crossIcon from "../../Assets/images/crossIcon.png";
 import EditMeeting from "../../Views/afterAuth/EditMeeting/EditMeeting";
 import CreateMeeting from "../../Views/afterAuth/CreateMeeting/CreateMeeting";
 import { deleteMeetingAction } from "../../Views/afterAuth/EditMeeting/Redux/reducer";
 import ConfirmationPopup from "../ConfirmationPopup/ConfirmationPopup";
+import { toast } from "react-toastify";
+import ToastifyMsg from "../ToastifyMsg/ToastifyMsg";
+import { clearError } from "../../Views/afterAuth/CreateMeeting/Redux/reducer";
 const newRow = [
   {
     meetingId: "6be3kt4arthrvv32o8kag1glbu",
@@ -77,7 +88,7 @@ const rows = [
 const ZoomEvent = () => {
   const columns = [
     // { field: "id", headerName: "MEETING TITLEs", width: 1 },
-    { field: "meetingTitle", headerName: "MEETING TITLE", width: 150 },
+    { field: "meetingTitle", headerName: "TITLE", width: 150 },
     {
       field: "organizer",
       headerName: "ORGANIZER",
@@ -108,48 +119,48 @@ const ZoomEvent = () => {
     },
     {
       field: "plateform",
-      headerName: "PLATEFORM",
+      headerName: "PLATFORM",
       width: 200,
       editable: true,
     },
     {
       field: "meetingStatus",
-      headerName: "Status",
-      width: 200,
+      headerName: "STATUS",
+      width: 150,
       renderCell: (params) => (
-        <Button
+        <Typography
           variant="contained"
-          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
+          // sx={{ width: "7rem", fontSize: "16px", padding: "4px" }}
           color={`${
             params?.value == "cancelled"
               ? "error"
               : params?.value == "upComing"
-              ? "warning"
-              : "success"
+              ? "orange"
+              : "green"
           }`}
         >
           {params?.value == "cancelled"
-            ? "cancelled"
+            ? "Cancelled"
             : params?.value == "upComing"
-            ? "upComing"
+            ? "Upcoming"
             : params?.value == "updated"
             ? "Rescheduled"
-            : "pending"}
-        </Button>
+            : "Pending"}
+        </Typography>
       ),
     },
     {
       field: "botStatus",
-      headerName: "Bot Status",
-      width: 200,
+      headerName: "BOT STATUS",
+      width: 150,
       renderCell: ({ row }) => (
-        <Button
+        <Typography
           variant="contained"
-          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
-          color={`success`}
+          // sx={{ width: "7rem", fontSize: "16px", padding: "4px" }}
+          color={`green`}
         >
           {row.botStatus ? "Bot Join" : "Manual"}
-        </Button>
+        </Typography>
       ),
     },
     {
@@ -166,8 +177,24 @@ const ZoomEvent = () => {
       width: 250,
     },
     {
+      field: "duration",
+      headerName: "DURATION",
+      width: 150,
+      renderCell: ({ row }) => (
+        <Typography
+          variant="contained"
+          // sx={{ width: "7rem", fontSize: "16px", padding: "4px" }}
+          color={`black`}
+        >
+          {row.botStatus
+            ? get_DiffTimeDuration(row.startTime, row.endTime)
+            : get_DiffTimeDuration(row.startTime, row.endTime)}
+        </Typography>
+      ),
+    },
+    {
       field: "update",
-      headerName: " ",
+      headerName: "ACTION",
       width: 100,
       // valueGetter: handleOpenVideo,
       renderCell: ({ row }) => (
@@ -206,6 +233,7 @@ const ZoomEvent = () => {
     googleTokenloading,
     filterData,
     FinalCalendarData,
+    FinalCalendarLoading,
     Get_GoogleCodeResponse,
     meetingStatus,
   } = useSelector((state) => state.platform);
@@ -246,6 +274,25 @@ const ZoomEvent = () => {
   const [modalToggle, setModalToggle] = useState(false);
   const [CreateMeetingModal, setCreateMeetingModal] = useState(false);
   const [tempSelectedRow, setTempSelectedRow] = useState([]);
+  const { createMeetingLoading, createMeetingMsg } = useSelector(
+    (state) => state.createMeeting
+  );
+  const { deleteMeetingMsg, DeleteMeetingLoading } = useSelector(
+    (state) => state.editMeeting
+  );
+
+  // if (createMeetingLoading === "succeeded") {
+  //   toast.success("Meeting Created Successfully", {
+  //     position: toast.POSITION.TOP_RIGHT,
+  //   });
+  //   setTimeout(()=>{
+  //     dispatch(clearError())
+  //   },3000)
+  // } else if (createMeetingLoading === "fail") {
+  //   toast.error(createMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
+  // } else if (DeleteMeetingLoading === "succeeded") {
+  //   toast.success(deleteMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
+  // }
 
   const handleEditClick = (row) => {
     // console.log(RowData);
@@ -255,10 +302,10 @@ const ZoomEvent = () => {
   const handleDeleteClick = (row) => {
     FinalCalendarData?.map((data) => {
       if (data.meetingUrl == row.id) {
-        console.log("Row ID", {
-          eventId: data.meetingId,
-          platForm: data.plateform,
-        });
+        // console.log("Row ID", {
+        //   eventId: data.meetingId,
+        //   platForm: data.plateform,
+        // });
 
         dispatch(
           deleteMeetingAction({
@@ -273,11 +320,10 @@ const ZoomEvent = () => {
   useEffect(() => {
     dispatch(FinalCalendarDataAction());
   }, [dispatch]);
-  console.log("nothing", tempSelectedRow);
 
   const checkDuplicateEventId = (data) => {
     let newSelectedArray = data.filter((e, i, a) => a.indexOf(e) === i);
-    console.log("dekh formate data", newSelectedArray);
+    // console.log("dekh formate data", newSelectedArray);
     return newSelectedArray;
   };
 
@@ -293,12 +339,6 @@ const ZoomEvent = () => {
         }
       }
     }
-
-    // for (let t = 0; t < array.tempSelectedRow; t++) {
-    //   const element = array[t];
-
-    // }
-
     if (tempSelectedRow.length > 0) {
       // dispatch(filterMeetingData(temp));
     }
@@ -324,6 +364,13 @@ const ZoomEvent = () => {
 
   return (
     <GeneralLayout>
+      {/* <Snackbar
+        open={createMeetingLoading === "succeeded"}
+        message={"Please Provide Valid Plan Id"}
+        severity="error"
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      /> */}
       <div className="ZoomUI">
         {/* <h1 className="ZoomUI--Header">Calendar Data </h1> */}
         <div className="ZoomUI--BtnBox">
@@ -361,6 +408,7 @@ const ZoomEvent = () => {
               columns={columns}
               pstartTimeSize={5}
               rowsPerPstartTimeOptions={[5]}
+              loading={FinalCalendarLoading === "pending"}
               disableSelectionOnClick
               experimentalFeatures={{ newEditingApi: true }}
               onSelectionModelChange={handleSelectedRow}

@@ -246,10 +246,10 @@ export const PlatformSlice = createSlice({
     //FinalCalendarData
     builder.addCase(FinalCalendarDataAction.pending, (state) => {
       state.FinalCalendarLoading = "pending";
+      state.FinalCalendarData = [];
     });
     builder.addCase(FinalCalendarDataAction.fulfilled, (state, action) => {
       state.FinalCalendarLoading = "succeeded";
-      console.log("chal bhai", action.payload);
       if (action.payload == null || action.payload == "") {
         state.FinalCalendarData = [];
       } else {

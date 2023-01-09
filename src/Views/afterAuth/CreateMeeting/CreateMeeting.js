@@ -1,13 +1,10 @@
 import {
   Avatar,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
   Typography,
@@ -19,7 +16,7 @@ import "./CreateMeeting.scss";
 import MultiEmailInput from "../../../Components/MultiEmailInput/MultiEmailInput";
 import { get_UTCFormateDate } from "../../../utils/Helper";
 import { createMeetingAction } from "./Redux/reducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const CreateMeeting = ({ setCreateMeetingModal }) => {
   const dispatch = useDispatch();
@@ -35,6 +32,8 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
   const [startDate, setstartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [selectPlatform, setSelectPlatform] = useState("");
+  const [google, setgoogle] = useState("sanskar.p@antino.io");
+  const [outlook, setoutlook] = useState("sanskargurjar3@gmail.com");
 
   const handlePlatformChange = (event) => {
     setSelectPlatform(event.target.value);
@@ -77,7 +76,7 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
     dispatch(
       createMeetingAction({
         ...CreateMeetingData,
-        platForm:selectPlatform,
+        platForm: selectPlatform,
         startTime: get_UTCFormateDate(startDate),
         endTime: get_UTCFormateDate(endDate),
         participents: tempEmailList,
@@ -89,7 +88,6 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
   function handleSelecetedTags(items) {
     console.log(items);
   }
-
   return (
     <div className="CreateMeeting--container">
       <img
@@ -173,8 +171,8 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
                   label="Select Platform"
                   onChange={handlePlatformChange}
                 >
-                  <MenuItem value={"Google"}>Google</MenuItem>
-                  <MenuItem value={"Outlook"}>Outlook</MenuItem>
+                  <MenuItem value={`Google`}>Google ({google})</MenuItem>
+                  <MenuItem value={`Outlook`}>Outlook ({outlook})</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

@@ -4,7 +4,7 @@ export let Pathname = {
 	SIGNUP: '/signup',
 	FORGETPASSWORD: '/forget',
 	RESETPASSWORD: '/reset',
-	ZOOM: '/zoom',
+	ZOOM: '/meeting',
 	UPDATEPROFILE: '/profile',
 	DASHBOARD: '/dashboard',
 	VIDEOS: '/video',

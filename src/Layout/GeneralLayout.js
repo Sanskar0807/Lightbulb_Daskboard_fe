@@ -16,7 +16,6 @@ const GeneralLayout = ({ children }) => {
   const handleMeetingVideo = () => {
     navigate(Pathname.VIDEOS);
   };
-  console.log(window.location.pathname);
   return (
     <div className="generalLayout">
       <div className="generalLayout--header">
@@ -29,22 +28,23 @@ const GeneralLayout = ({ children }) => {
               <Grid
                 item
                 xs={12}
-                sx={{ display: "flex", justifyContent: "center" }}
+                sx={{ display: "flex", justifyContent:"left" }}
               ></Grid>
               <Grid
                 item
                 xs={12}
-                sx={{ display: "flex", justifyContent: "center" }}
+                sx={{ display: "flex", justifyContent:"left" }}
               >
                 <Button
                   sx={{
                     width: "100%",
                     backgroundColor: `${
-                      window.location.pathname == "/dashboard"
+                      window.location.pathname == Pathname.DASHBOARD
                         ? "black"
                         : "rgb(40, 40, 40)"
                     }`,
                     color: "white",
+                    justifyContent:"left",
                   }}
                   onClick={handleIntegrationClick}
                 >
@@ -54,17 +54,18 @@ const GeneralLayout = ({ children }) => {
               <Grid
                 item
                 xs={12}
-                sx={{ display: "flex", justifyContent: "center" }}
+                sx={{ display: "flex", justifyContent:"left" }}
               >
                 <Button
                   sx={{
                     width: "100%",
                     backgroundColor: `${
-                      window.location.pathname == "/zoom"
+                      window.location.pathname == Pathname.ZOOM
                         ? "black"
                         : "rgb(40, 40, 40)"
                     }`,
                     color: "white",
+                    justifyContent:"left",
                   }}
                   onClick={handleMeetingClick}
                 >
@@ -74,21 +75,22 @@ const GeneralLayout = ({ children }) => {
               <Grid
                 item
                 xs={12}
-                sx={{ display: "flex", justifyContent: "center" }}
+                sx={{ display: "flex", justifyContent:"left" }}
               >
                 <Button
                   sx={{
                     width: "100%",
                     backgroundColor: `${
-                      window.location.pathname == "/video"
+                      window.location.pathname == Pathname.VIDEOS
                         ? "black"
                         : "rgb(40, 40, 40)"
                     }`,
                     color: "white",
+                    justifyContent:"left",
                   }}
                   onClick={handleMeetingVideo}
                 >
-                  Pasted Meetings
+                  Past Meetings
                 </Button>
               </Grid>
             </Grid>

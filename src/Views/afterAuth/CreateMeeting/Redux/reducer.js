@@ -19,8 +19,9 @@ export const createMeetingAction = createAsyncThunk(
     try {
       console.log("createMeetingAction action call", payload, get_Token());
 
-      const { data } = await services.post("meeting/create_zoom_meeting",
-      // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/create_zoom_meeting",
+      const { data } = await services.post(
+        "meeting/create_zoom_meeting",
+        // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/create_zoom_meeting",
         payload,
         {
           headers: {
@@ -41,7 +42,11 @@ export const createMeetingAction = createAsyncThunk(
 export const createMeetingSlice = createSlice({
   name: "createMeeting",
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = "";
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(createMeetingAction.pending, (state) => {
       state.createMeetingLoading = "pending";
@@ -53,6 +58,7 @@ export const createMeetingSlice = createSlice({
     });
     builder.addCase(createMeetingAction.rejected, (state, action) => {
       state.createMeetingLoading = "fail";
+      state.createMeetingMsg = action.payload;
       state.error = action.payload;
     });
   },
@@ -61,3 +67,4 @@ export const createMeetingSlice = createSlice({
 console.log("reducer createMeetingSlice", createMeetingSlice);
 
 export default createMeetingSlice.reducer;
+export const {clearError} = createMeetingSlice.actions;

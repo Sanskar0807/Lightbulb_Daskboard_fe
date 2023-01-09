@@ -1,7 +1,7 @@
 export const formateData = (items) => {
   return items?.map((e) => {
     return {
-      id: (e?.meetingUrl)===null?"":e?.meetingUrl,
+      id: e?.meetingUrl === null ? "" : e?.meetingUrl,
       // meetingLink: e?.meetingUrl,
       organizer: e?.organizer,
       meetingTitle: e?.meetingTitle,
@@ -17,7 +17,7 @@ export const formateData = (items) => {
 
       meetingStatus: e?.meetingStatus,
       botStatus: e?.botStatus,
-      meetingLink:e?.recMetUrl
+      meetingLink: e?.recMetUrl,
 
       // meetingCode: e.conferenceData?.entryPoints[0].meetingCode,
 
@@ -47,7 +47,23 @@ export const get_UTCFormateDate = (date) => {
   //     newDate.getMinutes()
   //   )
   // );
-let isoDate = newDate.toISOString()
+  let isoDate = newDate.toISOString();
 
   return isoDate;
+};
+
+export const get_DiffTimeDuration = (d1, d2) => {
+  var date1 = new Date(d1);
+  var date2 = new Date(d2);
+
+  var diff = date2.getTime() - date1.getTime();
+
+  var msec = diff;
+  var hh = Math.floor(msec / 1000 / 60 / 60);
+  msec -= hh * 1000 * 60 * 60;
+  var mm = Math.floor(msec / 1000 / 60);
+  msec -= mm * 1000 * 60;
+  var ss = Math.floor(msec / 1000);
+  msec -= ss * 1000;
+  return `${hh}h:${mm}m:${ss}s`   ;
 };

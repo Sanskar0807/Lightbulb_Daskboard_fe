@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Link, Modal } from "@mui/material";
+import { Box, Button, CircularProgress, Link, Modal, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import GeneralLayout from "../../../Layout/GeneralLayout";
@@ -8,7 +8,7 @@ import { width } from "@mui/system";
 import EditMeeting from "../EditMeeting/EditMeeting";
 import crossIcon from "../../../Assets/images/crossIcon.png";
 import { useDispatch, useSelector } from "react-redux";
-import { formateData } from "../../../utils/Helper";
+import { formateData, get_DiffTimeDuration } from "../../../utils/Helper";
 import { FinalCalendarDataAction } from "../PlatformLogin/Redux/reducer";
 import { getVideoAction } from "./Redux/reducer";
 
@@ -172,27 +172,27 @@ const MeetingURl = () => {
       headerName: "Status",
       width: 200,
       renderCell: (params) => (
-        <Button
+        <Typography
           variant="contained"
-          sx={{ width: "7rem", fontSize: "11px", padding: "4px" }}
-          color={`success`}
+          color={`green`}
         >
           Completed
-        </Button>
+        </Typography>
       ),
     },
     {
-      field: "startTime",
-      headerName: "Start Time",
-      width: 250,
-      editable: true,
-    },
-    {
-      field: "endTime",
-      headerName: "End Time",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 250,
+      field: "duration",
+      headerName: "DURATION",
+      width: 150,
+      renderCell: ({ row }) => (
+        <Typography
+          variant="contained"
+          // sx={{ width: "7rem", fontSize: "16px", padding: "4px" }}
+          color={`black`}
+        >
+          {row.botStatus ? get_DiffTimeDuration(row.startTime, row.endTime) :get_DiffTimeDuration(row.startTime, row.endTime)}
+        </Typography>
+      ),
     },
   ];
   const rows = [
@@ -233,7 +233,7 @@ const MeetingURl = () => {
     FinalCalendarData
   } = useSelector((state) => state.platform);
   const {
-    getVideoMeeting
+    getVideoMeeting,getVideoloading
   } = useSelector((state) => state.video);
   const dispatch = useDispatch();
 
@@ -275,6 +275,7 @@ const MeetingURl = () => {
               columns={Newcolumns}
               pstartTimeSize={5}
               rowsPerPstartTimeOptions={[5]}
+              loading={getVideoloading === "pending"}
               disableSelectionOnClick
               experimentalFeatures={{ newEditingApi: true }}
               // onSelectionModelChange={handleSelectedRow}
