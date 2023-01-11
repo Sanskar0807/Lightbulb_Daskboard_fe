@@ -15,7 +15,7 @@ export const dashboardSlice = createSlice({
 			state.loading = true;
 		})
 		builder.addCase(UsersFetchAction.fulfilled, (state, action) => {
-			console.log(action)
+			//console.log(action)
 			state.loading = false
 			state.users = action.payload
 			state.error = ''
