@@ -45,7 +45,7 @@ export const updateUserAction = createAsyncThunk(
         let t_id = localStorage.getItem("t_id");
         console.log("updateUserAction ACTION with t_id", payload, t_id);
         const response = await services.put(
-          "user/update_profile",
+          "user/update-profile",
           payload,
           {
             headers: {

@@ -58,13 +58,13 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
         email: dta,
       };
     });
-    console.log({
-      ...CreateMeetingData,
-      platForm: selectPlatform,
-      startTime: get_UTCFormateDate(startDate),
-      endTime: get_UTCFormateDate(endDate),
-      participents: tempEmailList,
-    });
+    // console.log({
+    //   ...CreateMeetingData,
+    //   platForm: selectPlatform,
+    //   startTime: get_UTCFormateDate(startDate),
+    //   endTime: get_UTCFormateDate(endDate),
+    //   participents: tempEmailList,
+    // });
 
     setCreateMeetingData({
       ...CreateMeetingData,
@@ -171,8 +171,8 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
                   label="Select Platform"
                   onChange={handlePlatformChange}
                 >
-                  <MenuItem value={`Google`}>Google ({google})</MenuItem>
-                  <MenuItem value={`Outlook`}>Outlook ({outlook})</MenuItem>
+                  <MenuItem value={`Google`}>Google </MenuItem>
+                  <MenuItem value={`Outlook`}>Outlook </MenuItem>
                 </Select>
               </FormControl>
             </Grid>

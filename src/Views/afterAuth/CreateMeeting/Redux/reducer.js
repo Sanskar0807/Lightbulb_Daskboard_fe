@@ -17,11 +17,11 @@ export const createMeetingAction = createAsyncThunk(
   "/createMeeting",
   async (payload, thunkAPI) => {
     try {
-      console.log("createMeetingAction action call", payload, get_Token());
+      //console.log("createMeetingAction action call", payload, get_Token());
 
       const { data } = await services.post(
-        "meeting/create_zoom_meeting",
-        // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/create_zoom_meeting",
+        "meeting/create-meeting",
+
         payload,
         {
           headers: {
@@ -30,9 +30,9 @@ export const createMeetingAction = createAsyncThunk(
           },
         }
       );
-      console.log("createMeetingAction reponse", data);
+      //console.log("createMeetingAction reponse", data);
       thunkAPI.dispatch(FinalCalendarDataAction());
-      return data;
+      return data?.message;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -44,7 +44,7 @@ export const createMeetingSlice = createSlice({
   initialState,
   reducers: {
     clearError: (state) => {
-      state.error = "";
+      state.createMeetingLoading = "idle";
     },
   },
   extraReducers: (builder) => {
@@ -53,6 +53,11 @@ export const createMeetingSlice = createSlice({
     });
     builder.addCase(createMeetingAction.fulfilled, (state, action) => {
       state.createMeetingLoading = "succeeded";
+      if (action.payload == null || action.payload == "" || action.payload == undefined) {
+        state.createMeetingMsg = "";
+      } else {
+        state.createMeetingMsg = action.payload;
+      }
       state.createMeetingMsg = action.payload;
       state.error = "";
     });
@@ -64,7 +69,7 @@ export const createMeetingSlice = createSlice({
   },
 });
 
-console.log("reducer createMeetingSlice", createMeetingSlice);
+// //console.log("reducer createMeetingSlice", createMeetingSlice);
 
 export default createMeetingSlice.reducer;
 export const {clearError} = createMeetingSlice.actions;
