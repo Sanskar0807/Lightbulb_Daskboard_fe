@@ -50,7 +50,7 @@ export const filterMeetingData = createAsyncThunk(
       let t_id = localStorage.getItem("t_id");
       console.log("filter_meeting ACTION with t_id", payload, t_id);
       const response = await services.post(
-        "/meeting/save_meeting",
+        "/meeting/botJoin-meeting",
         { meetingDetails: payload },
         {
           headers: {
@@ -73,7 +73,7 @@ export const filterMeetingData = createAsyncThunk(
 //get_url by google
 export const Get_Url = createAsyncThunk("/get_url", async (_, thunkAPI) => {
   try {
-    const { data } = await services.get("meeting/get_url", {
+    const { data } = await services.get("meeting/get-url", {
       headers: {
         "ngrok-skip-browser-warning": true,
         Authorization: `Bearer ${get_Token()}`,
@@ -93,7 +93,7 @@ export const set_GoogleCode = createAsyncThunk(
       console.log("afterConsent Action", payload);
 
       const { data } = await services.post(
-        "meeting/afterConsent",
+        "meeting/after-consent",
         { code: payload },
         {
           headers: {
@@ -135,8 +135,7 @@ export const set_OutlookCode = createAsyncThunk(
   "/set_codeOutlook",
   async (payload, thunkAPI) => {
     try {
-      // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/auth",
-      const { data } = await services.post("auth",
+      const { data } = await services.post("get-auth-code",
         { code: payload },
         {
           headers: {
@@ -158,7 +157,7 @@ export const FinalCalendarDataAction = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       // const { data } = await axios.get("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/get_calendar", {
-        const { data } = await services.get("meeting/get_calendar", {
+        const { data } = await services.get("meeting/get-calendar-data", {
         headers: {
           "ngrok-skip-browser-warning": true,
           Authorization: `Bearer ${get_Token()}`,
@@ -211,9 +210,10 @@ export const PlatformSlice = createSlice({
       state.Get_UrlLoading = "pending";
     });
     builder.addCase(Get_Url.fulfilled, (state, action) => {
-      console.log("action", action);
+      console.log("action get url", action.payload);
       state.Get_UrlLoading = "succeeded";
-      state.Get_UrlLink = action.payload?.data;
+      state.Get_UrlLink = action.payload?.googleAuthUrl;
+      state.Get_UrlOutlookLink = action.payload?.outlookAuthUrl;
       state.isUserFirstTime = action.payload?.isUserFirstTime;
     });
     builder.addCase(Get_Url.rejected, (state, action) => {

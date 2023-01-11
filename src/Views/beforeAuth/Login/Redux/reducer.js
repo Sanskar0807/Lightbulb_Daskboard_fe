@@ -24,10 +24,10 @@ const initialState = {
 // });
 export const loginUser = createAsyncThunk(`auth/login`,async (payload,thunkAPI)=>{
   try {
-    console.log("LOGIN ACTION",payload);
+    // console.log("LOGIN ACTION",payload);
 
-    const response  = await services.post("user/login_user",payload)
-    console.log(response.data.data.response.data.token);
+    const response  = await services.post("user/login-user",payload)
+    // console.log(response.data.data.response.data.token);
     localStorage.setItem('t_id',response?.data?.data?.response?.data?.token)
     return response?.data?.data?.response?.data?.token
   } catch (error) {
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(`auth/login`,async (payload,thunkAPI)=
 //LOGOUT
 export const logout = createAsyncThunk("auth/logout", () => {
   try {
-    console.log("Log out Action");
+    // console.log("Log out Action");
     removeLocalStorage()
     // navigate(Pathname.LOGIN)
     return true;
@@ -52,6 +52,9 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    clearLoginState:(state)=>{
+      state.loginLoading="idle";
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(loginUser.pending, (state) => {
@@ -88,7 +91,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { clearError } = authSlice.actions;
-console.log("slice",authSlice);
-
+export const { clearError,clearLoginState } = authSlice.actions;
 export default authSlice.reducer;

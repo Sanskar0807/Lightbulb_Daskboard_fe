@@ -22,7 +22,7 @@ import editIcon from "../../Assets/images/edit.png";
 import crossIcon from "../../Assets/images/crossIcon.png";
 import EditMeeting from "../../Views/afterAuth/EditMeeting/EditMeeting";
 import CreateMeeting from "../../Views/afterAuth/CreateMeeting/CreateMeeting";
-import { deleteMeetingAction } from "../../Views/afterAuth/EditMeeting/Redux/reducer";
+import { clearDeleteState, clearEditState, deleteMeetingAction } from "../../Views/afterAuth/EditMeeting/Redux/reducer";
 import ConfirmationPopup from "../ConfirmationPopup/ConfirmationPopup";
 import { toast } from "react-toastify";
 import ToastifyMsg from "../ToastifyMsg/ToastifyMsg";
@@ -281,18 +281,22 @@ const ZoomEvent = () => {
     (state) => state.editMeeting
   );
 
-  // if (createMeetingLoading === "succeeded") {
-  //   toast.success("Meeting Created Successfully", {
-  //     position: toast.POSITION.TOP_RIGHT,
-  //   });
-  //   setTimeout(()=>{
-  //     dispatch(clearError())
-  //   },3000)
-  // } else if (createMeetingLoading === "fail") {
-  //   toast.error(createMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
-  // } else if (DeleteMeetingLoading === "succeeded") {
-  //   toast.success(deleteMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
-  // }
+  if (createMeetingLoading === "succeeded") {
+    // toast.success("Meeting Created Successfully", {
+    //   position: toast.POSITION.TOP_RIGHT,
+    // });
+    setTimeout(()=>{
+      dispatch(clearError())
+    },3000)
+  } else if (createMeetingLoading === "fail") {
+    
+    // toast.error(createMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
+  } else if (DeleteMeetingLoading === "succeeded") {
+    // toast.success(deleteMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
+    setTimeout(()=>{
+      dispatch(clearDeleteState())
+    },3000)
+  }
 
   const handleEditClick = (row) => {
     // console.log(RowData);
@@ -344,12 +348,7 @@ const ZoomEvent = () => {
     }
   };
 
-  const handleMeetingUrl = (row) => {
-    setRowData(row.row);
-    // if (row.row.id) {
-    //   window.open(row.row.id)
-    // }
-  };
+
   const handleCreateMeeting = () => {
     setCreateMeetingModal(true);
   };
@@ -361,16 +360,33 @@ const ZoomEvent = () => {
       setTempSelectedRow([]);
     }
   };
+  const { EditMeetingLoading } = useSelector((state) => state.editMeeting);
+  if (EditMeetingLoading === "succeeded") {
+    setTimeout(() => {
+      dispatch(clearEditState());
+    }, 3000);
+  }
 
   return (
     <GeneralLayout>
-      {/* <Snackbar
-        open={createMeetingLoading === "succeeded"}
-        message={"Please Provide Valid Plan Id"}
-        severity="error"
+      <Snackbar
+        open={(createMeetingLoading === "succeeded")}
+        message={createMeetingMsg}
         autoHideDuration={2000}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      /> */}
+      />
+      <Snackbar
+        open={(DeleteMeetingLoading === "succeeded")}
+        message={"Meeting Delete successfully"}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      />
+      <Snackbar
+        open={EditMeetingLoading === "succeeded"}
+        message={"Meeting Reschedule successfully"}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      />
       <div className="ZoomUI">
         {/* <h1 className="ZoomUI--Header">Calendar Data </h1> */}
         <div className="ZoomUI--BtnBox">

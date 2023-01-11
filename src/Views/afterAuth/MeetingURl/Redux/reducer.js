@@ -16,14 +16,14 @@ export const getVideoAction = createAsyncThunk(
   "/getVideoLink",
   async (_, thunkAPI) => {
     try {
-      console.log(" getVideoLink Action");
-      const { data } = await services.get("meeting/get_downloadMeting", {
+      //////////////////////////////////console.log(" getVideoLink Action");
+      const { data } = await services.get("meeting/get-recorded-meeting", {
         headers: {
           "ngrok-skip-browser-warning": true,
           Authorization: `Bearer ${get_Token()}`,
         },
       });
-      console.log(data?.data?.response?.data);
+      //////////////////////////////////console.log(data?.data?.response?.data);
       return data?.data?.response?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
@@ -56,5 +56,5 @@ export const VideoSlice = createSlice({
   },
 });
 
-console.log(VideoSlice);
+//console.log(VideoSlice);
 export default VideoSlice.reducer;

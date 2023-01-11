@@ -140,7 +140,6 @@ const MeetingURl = () => {
                 }}
               />
               <video width="50%" height="500" controls>
-               { console.log(row)}
                 <source
                   src={row?.meetingLink}
                   type="video/mp4"
@@ -245,7 +244,7 @@ const MeetingURl = () => {
   };
   const handleDeleteClick = () => {};
   const handleOpenVideo = (row) => {
-    console.log(row);
+    // console.log(row);
   };
   useEffect(() => {
     dispatch(FinalCalendarDataAction());

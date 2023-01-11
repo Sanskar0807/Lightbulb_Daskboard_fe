@@ -1,26 +1,18 @@
 import {
   Avatar,
   Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import GeneralLayout from "../../../Layout/GeneralLayout";
-import { Pathname } from "../../../Pathname";
+import { useNavigate } from "react-router-dom";
 import "./EditMeeting.scss";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   editMeetingAction,
-  getUserDataAction,
-  updateUserAction,
 } from "./Redux/reducer";
 import { toast } from "react-toastify";
 import crossIcon from "../../../Assets/images/crossIcon.png";
@@ -47,7 +39,6 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
     meetingId: "",
   });
   const [selectPlateForm, setSelectPlateForm] = useState("");
-  console.log(RowData);
   const [TempCountryCode, setTempCountryCode] = useState({
     Code: "",
     number: "",
@@ -73,11 +64,12 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
           });
           setstartDate(row.startTime);
           setEndDate(row.endTime);
-          setTempDate(row.startTime)
+          setTempDate(row.startTime);
           setSelectPlateForm(
-            row.plateform == "Zoom Meeting" ? "Google" : "Outlook"
+            row.plateform == ("Zoom Meeting" && "Google Meet")
+              ? "Google"
+              : "Outlook"
           );
-          console.log("row", row);
         }
       });
     }
@@ -85,12 +77,12 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log({
-      ...UpdateProfileData,
-      PlatForm: selectPlateForm,
-      startTime: get_UTCFormateDate(startDate),
-      endTime: get_UTCFormateDate(endDate),
-    });
+    // console.log({
+    //   ...UpdateProfileData,
+    //   PlatForm: selectPlateForm,
+    //   startTime: get_UTCFormateDate(startDate),
+    //   endTime: get_UTCFormateDate(endDate),
+    // });
     dispatch(
       editMeetingAction({
         ...UpdateProfileData,
@@ -128,8 +120,10 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
     } = event;
     setUpdateProfileData({ ...UpdateProfileData, [name]: value });
   };
+  
   return (
     <>
+      
       <div className="EditMeeting--conainer">
         <img
           src={crossIcon}
@@ -176,7 +170,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                   error={false}
                 />
               </Grid>
-              
+
               {/* <Grid item xs={12} sm={12}>
                 <TextField
                   required
@@ -204,7 +198,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
               </Grid> */}
               <Grid item xs={12}>
                 <SelectDropdown
-                  dropdownData={["Google", "Outlook"]}
+                  dropdownData={[selectPlateForm]}
                   handleSelect={handleSelect}
                   selectState={selectPlateForm}
                   label={"Select Platform"}

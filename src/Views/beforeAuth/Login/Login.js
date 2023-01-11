@@ -13,11 +13,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Pathname } from "../../../Pathname";
-import { Paper } from "@mui/material";
+import { Paper, Snackbar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "./Redux/reducer";
- 
+
 function Copyright(props) {
   return (
     <Typography
@@ -41,10 +41,10 @@ const theme = createTheme();
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const  {loginLoading} = useSelector((state)=>state.auth)
+  const { loginLoading } = useSelector((state) => state.auth);
   console.log(loginLoading);
-  if(loginLoading==="succeeded"){
-    navigate(Pathname.DASHBOARD)
+  if (loginLoading === "succeeded") {
+    navigate(Pathname.DASHBOARD);
   }
 
   const handleSubmit = (event) => {
@@ -55,101 +55,106 @@ export default function SignIn() {
       password: data.get("password"),
     });
 
-    dispatch(loginUser({
-
-      email: data.get("email"),
-      password: data.get("password"),
-    }))
-    
-    
+    dispatch(
+      loginUser({
+        email: data.get("email"),
+        password: data.get("password"),
+      })
+    );
   };
-  
-  if(loginLoading=="succeeded"){
-    let temp = true
-    if(temp){
 
-      navigate(Pathname.DASHBOARD)
-      temp=false;
+  if (loginLoading == "succeeded") {
+    let temp = true;
+    if (temp) {
+      navigate(Pathname.DASHBOARD);
+      temp = false;
     }
-
   }
-  
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Paper elevation={4} sx={{ padding: "1rem",marginTop:"4rem" }}>
-          <Box
-            sx={{
-              marginTop: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              {/* <LockOutlinedIcon /> */}
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
+    <>
+      <Snackbar
+        open={loginLoading === "succeeded"}
+        message={"User Login successfully"}
+        severity="success"
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      />
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Paper elevation={4} sx={{ padding: "1rem", marginTop: "4rem" }}>
             <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
+              sx={{
+                marginTop: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                {/* <LockOutlinedIcon /> */}
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
               >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href={Pathname.FORGETPASSWORD} variant="body2">
-                    Forgot password?
-                  </Link>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href={Pathname.FORGETPASSWORD} variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link href={Pathname.SIGNUP} variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Link href={Pathname.SIGNUP} variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
+              </Box>
             </Box>
-          </Box>
-        </Paper>
+          </Paper>
 
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+          <Copyright sx={{ mt: 8, mb: 4 }} />
+        </Container>
+      </ThemeProvider>
+    </>
   );
 }

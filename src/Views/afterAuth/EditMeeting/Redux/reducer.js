@@ -12,7 +12,7 @@ const initialState = {
   success: false,
   updateProfileMsg: "",
   editMeetingStatus: "",
-  deleteMeetingMsg:"",
+  deleteMeetingMsg: "",
 };
 
 //updateUser
@@ -21,21 +21,16 @@ export const editMeetingAction = createAsyncThunk(
   "/editMeeting",
   async (payload, thunkAPI) => {
     try {
-      console.log("editMeetingAction action call", payload);
+      //console.log("editMeetingAction action call", payload);
 
-      const { data } = await services.put(
-        "meeting/reschedule_meeting",
-        payload,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": true,
-            Authorization: `Bearer ${get_Token()}`,
-          },
-        }
-      );
-      console.log("editMeetingAction reponse", data);
-      thunkAPI.dispatch(FinalCalendarDataAction())
-
+      const { data } = await services.put("meeting/update-meeting", payload, {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          Authorization: `Bearer ${get_Token()}`,
+        },
+      });
+      //console.log("editMeetingAction reponse", data);
+      thunkAPI.dispatch(FinalCalendarDataAction());
 
       return data;
     } catch (error) {
@@ -48,32 +43,34 @@ export const deleteMeetingAction = createAsyncThunk(
   "/deleteMeeting",
   async (payload, thunkAPI) => {
     try {
-      console.log("deleteMeetingAction action call", payload,get_Token());
+      //console.log("deleteMeetingAction action call", payload, get_Token());
 
-      const { data } = await services.post("meeting/delete_meeting",
-      // const { data } = await axios.post("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/delete_meeting",
-        payload,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": true,
-            Authorization: `Bearer ${get_Token()}`,
-          },
-        }
-      );
-      console.log("deleteMeetingAction reponse", data?.response?.message);
-      thunkAPI.dispatch(FinalCalendarDataAction())
-      return data?.response?.message;
+      const { data } = await services.post("meeting/delete-meeting", payload, {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          Authorization: `Bearer ${get_Token()}`,
+        },
+      });
+      //console.log("deleteMeetingAction reponse", data);
+      thunkAPI.dispatch(FinalCalendarDataAction());
+      return data?.message;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-
 export const editMeetingSlice = createSlice({
   name: "editMeeting",
   initialState,
-  reducers: {},
+  reducers: {
+    clearDeleteState: (state) => {
+      state.DeleteMeetingLoading = "idle";
+    },
+    clearEditState: (state)=>{
+      state.EditMeetingLoading = "idle"
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(editMeetingAction.pending, (state) => {
       state.EditMeetingLoading = "pending";
@@ -103,6 +100,7 @@ export const editMeetingSlice = createSlice({
   },
 });
 
-console.log("reducer editMeetingSlice", editMeetingSlice);
+// //console.log("reducer editMeetingSlice", editMeetingSlice);
 
 export default editMeetingSlice.reducer;
+export const { clearDeleteState,clearEditState } = editMeetingSlice.actions;

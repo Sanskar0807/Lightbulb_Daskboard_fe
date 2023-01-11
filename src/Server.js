@@ -16,13 +16,13 @@ export var Server = {
 
 		if (isAuth) {
 			let token = localStorage.getItem("t_id");
-			console.log(token);
+			// console.log(token);
 			requestOptions.headers["Authorization"] = `Bearer ${token}`;
 			requestOptions.headers["x-auth-token"] = `Bearer ${token}`;
-			console.log("yesnext");
+			// console.log("yesnext");
 		}
 		const a = await fetch(BASE_URL + url, requestOptions);
-		console.log(a);
+		// console.log(a);
 		return await a.json();
 	},
 

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import GeneralLayout from "../../../Layout/GeneralLayout";
-import Googledemo from "../../../Components/GoogleSignup/Googledemo";
 import Box from "@mui/material/Box";
-import { isMobileOnly } from "react-device-detect";
+import { isMobile, isMobileOnly } from "react-device-detect";
 import {
   FinalCalendarData,
   FinalCalendarDataAction,
@@ -25,25 +24,21 @@ const PlatformLogin = () => {
     Get_UrlCode,
     Get_UrlOutlookCode,
     Get_UrlOutlookLink,
+    isUserFirstTime,
   } = useSelector((state) => state.platform);
   const navigate = useNavigate();
   const [IntergationClick, setIntergationClick] = useState(1);
   const [ParamsCode, setParamsCode] = useState("");
   const dispatch = useDispatch();
   const [FlagMeeting, setFlagMeeting] = useState("");
-  console.log("dekh bhai", FlagMeeting);
 
   useEffect(() => {
     if (!Get_UrlCode) {
       dispatch(Get_Url());
     }
-    if (!Get_UrlOutlookCode) {
-      dispatch(Get_UrlOutlook());
-    }
     setParamsCode(searchParams.get("code"));
-    
-    if (searchParams.get("state")=="outlook") {
-      console.log("chALA ME");
+
+    if (searchParams.get("state") == "outlook") {
       let temp = true;
       if (temp) {
         // alert("chal bhai");
@@ -51,7 +46,7 @@ const PlatformLogin = () => {
 
         temp = false;
       }
-    }else{
+    } else {
       if (searchParams.get("code")) {
         let temp = true;
         if (temp) {
@@ -83,9 +78,7 @@ const PlatformLogin = () => {
     window.open(Get_UrlOutlookLink, "_self");
     setFlagMeeting("outlook");
   };
-  const tempClick = () => {
-    dispatch(set_OutlookCode("M.R3_BAY.e7459a02-bf97-beb2-d908-ce9500aaca9d"));
-  };
+  
 
   return (
     <GeneralLayout
@@ -105,7 +98,7 @@ const PlatformLogin = () => {
               }}
             >
               <Grid item xs={12} md={12}>
-                <h1 onClick={tempClick}>Login Your Account</h1>
+                <h1 >Login Your Account</h1>
                 {/* <Googledemo /> */}
                 {/* </Button> */}
               </Grid>
@@ -129,7 +122,7 @@ const PlatformLogin = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          {!isMobileOnly && (
+          {!isMobile && (
             <img
               src="https://img.freepik.com/free-vector/sign-up-concept-illustration_114360-7885.jpg?w=2000"
               style={{ height: "80vh" }}
