@@ -93,7 +93,7 @@ export const set_GoogleCode = createAsyncThunk(
       console.log("afterConsent Action", payload);
 
       const { data } = await services.post(
-        "meeting/after-consent",
+        "meeting/google/get-auth-code",
         { code: payload },
         {
           headers: {
@@ -135,7 +135,7 @@ export const set_OutlookCode = createAsyncThunk(
   "/set_codeOutlook",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await services.post("get-auth-code",
+      const { data } = await services.post("meeting/outlook/get-auth-code",
         { code: payload },
         {
           headers: {
