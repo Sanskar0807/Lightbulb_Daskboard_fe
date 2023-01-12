@@ -66,7 +66,7 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
           setEndDate(row.endTime);
           setTempDate(row.startTime);
           setSelectPlateForm(
-            row.plateform == ("Zoom Meeting" && "Google Meet")
+            row.plateform == ("Zoom Meeting" || "Google Meet")
               ? "Google"
               : "Outlook"
           );
