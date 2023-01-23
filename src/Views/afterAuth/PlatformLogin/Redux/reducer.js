@@ -123,7 +123,7 @@ export const Get_UrlOutlook = createAsyncThunk(
           Authorization: `Bearer ${get_Token()}`,
         },
       });
-      console.log("Get_UrlOutlook",data);
+      console.log("Get_UrlOutlook", data);
       return data?.Data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -135,7 +135,8 @@ export const set_OutlookCode = createAsyncThunk(
   "/set_codeOutlook",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await services.post("meeting/outlook/get-auth-code",
+      const { data } = await services.post(
+        "meeting/outlook/get-auth-code",
         { code: payload },
         {
           headers: {
@@ -151,19 +152,20 @@ export const set_OutlookCode = createAsyncThunk(
     }
   }
 );
-// Get all Outlook + Calendar Data 
+// Get all Outlook + Calendar Data
 export const FinalCalendarDataAction = createAsyncThunk(
   "/CalendarData",
   async (_, thunkAPI) => {
     try {
       // const { data } = await axios.get("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/get_calendar", {
-        const { data } = await services.get("meeting/get-calendar-data", {
+      const { data } = await services.get("meeting/calendar", {
         headers: {
           "ngrok-skip-browser-warning": true,
           Authorization: `Bearer ${get_Token()}`,
         },
       });
-      return data?.data?.response?.data;
+      console.log(data?.data);
+      return data?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
     }
@@ -253,6 +255,7 @@ export const PlatformSlice = createSlice({
       if (action.payload == null || action.payload == "") {
         state.FinalCalendarData = [];
       } else {
+        console.log("Fina Response of Action Caledar");
         state.FinalCalendarData = action.payload;
       }
     });
