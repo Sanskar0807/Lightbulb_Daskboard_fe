@@ -20,7 +20,7 @@ export const createMeetingAction = createAsyncThunk(
       //console.log("createMeetingAction action call", payload, get_Token());
 
       const { data } = await services.post(
-        "meeting/create-meeting",
+        "meeting/calendar",
 
         payload,
         {
@@ -53,7 +53,11 @@ export const createMeetingSlice = createSlice({
     });
     builder.addCase(createMeetingAction.fulfilled, (state, action) => {
       state.createMeetingLoading = "succeeded";
-      if (action.payload == null || action.payload == "" || action.payload == undefined) {
+      if (
+        action.payload == null ||
+        action.payload == "" ||
+        action.payload == undefined
+      ) {
         state.createMeetingMsg = "";
       } else {
         state.createMeetingMsg = action.payload;
@@ -72,4 +76,4 @@ export const createMeetingSlice = createSlice({
 // //console.log("reducer createMeetingSlice", createMeetingSlice);
 
 export default createMeetingSlice.reducer;
-export const {clearError} = createMeetingSlice.actions;
+export const { clearError } = createMeetingSlice.actions;
