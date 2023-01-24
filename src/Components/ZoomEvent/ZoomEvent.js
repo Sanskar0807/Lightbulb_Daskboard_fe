@@ -22,7 +22,11 @@ import editIcon from "../../Assets/images/edit.png";
 import crossIcon from "../../Assets/images/crossIcon.png";
 import EditMeeting from "../../Views/afterAuth/EditMeeting/EditMeeting";
 import CreateMeeting from "../../Views/afterAuth/CreateMeeting/CreateMeeting";
-import { clearDeleteState, clearEditState, deleteMeetingAction } from "../../Views/afterAuth/EditMeeting/Redux/reducer";
+import {
+  clearDeleteState,
+  clearEditState,
+  deleteMeetingAction,
+} from "../../Views/afterAuth/EditMeeting/Redux/reducer";
 import ConfirmationPopup from "../ConfirmationPopup/ConfirmationPopup";
 import { toast } from "react-toastify";
 import ToastifyMsg from "../ToastifyMsg/ToastifyMsg";
@@ -285,17 +289,16 @@ const ZoomEvent = () => {
     // toast.success("Meeting Created Successfully", {
     //   position: toast.POSITION.TOP_RIGHT,
     // });
-    setTimeout(()=>{
-      dispatch(clearError())
-    },3000)
+    setTimeout(() => {
+      dispatch(clearError());
+    }, 3000);
   } else if (createMeetingLoading === "fail") {
-    
     // toast.error(createMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
   } else if (DeleteMeetingLoading === "succeeded") {
     // toast.success(deleteMeetingMsg, { position: toast.POSITION.TOP_RIGHT });
-    setTimeout(()=>{
-      dispatch(clearDeleteState())
-    },3000)
+    setTimeout(() => {
+      dispatch(clearDeleteState());
+    }, 3000);
   }
 
   const handleEditClick = (row) => {
@@ -304,17 +307,15 @@ const ZoomEvent = () => {
     setRowData(row);
   };
   const handleDeleteClick = (row) => {
+    console.log("Row Data", row);
+
     FinalCalendarData?.map((data) => {
       if (data.meetingUrl == row.id) {
-        // console.log("Row ID", {
-        //   eventId: data.meetingId,
-        //   platForm: data.plateform,
-        // });
+        console.log("Meeting Found", data.meetingId);
 
         dispatch(
           deleteMeetingAction({
             meetingId: data.meetingId,
-            platForm: data.plateform == "Zoom Meeting" ? "Google" : "Outlook",
           })
         );
       }
@@ -348,7 +349,6 @@ const ZoomEvent = () => {
     }
   };
 
-
   const handleCreateMeeting = () => {
     setCreateMeetingModal(true);
   };
@@ -370,13 +370,13 @@ const ZoomEvent = () => {
   return (
     <GeneralLayout>
       <Snackbar
-        open={(createMeetingLoading === "succeeded")}
+        open={createMeetingLoading === "succeeded"}
         message={createMeetingMsg}
         autoHideDuration={2000}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       />
       <Snackbar
-        open={(DeleteMeetingLoading === "succeeded")}
+        open={DeleteMeetingLoading === "succeeded"}
         message={"Meeting Delete successfully"}
         autoHideDuration={2000}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
