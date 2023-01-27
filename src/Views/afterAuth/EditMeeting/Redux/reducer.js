@@ -16,14 +16,13 @@ const initialState = {
 };
 
 //updateUser
-
 export const editMeetingAction = createAsyncThunk(
   "/editMeeting",
   async (payload, thunkAPI) => {
     try {
       //console.log("editMeetingAction action call", payload);
 
-      const { data } = await services.put("meeting/update-meeting", payload, {
+      const { data } = await services.put("meeting/calendar", payload, {
         headers: {
           "ngrok-skip-browser-warning": true,
           Authorization: `Bearer ${get_Token()}`,
@@ -43,15 +42,17 @@ export const deleteMeetingAction = createAsyncThunk(
   "/deleteMeeting",
   async (payload, thunkAPI) => {
     try {
-      //console.log("deleteMeetingAction action call", payload, get_Token());
+      console.log("deleteMeetingAction action call", payload, get_Token());
 
-      const { data } = await services.post("meeting/delete-meeting", payload, {
-        headers: {
-          "ngrok-skip-browser-warning": true,
-          Authorization: `Bearer ${get_Token()}`,
-        },
+      const headers = {
+        "ngrok-skip-browser-warning": true,
+        Authorization: `Bearer ${get_Token()}`,
+      };
+
+      const { data } = await services.delete("meeting/calendar", payload, {
+        headers,
       });
-      //console.log("deleteMeetingAction reponse", data);
+      console.log("deleteMeetingAction reponse", data);
       thunkAPI.dispatch(FinalCalendarDataAction());
       return data?.message;
     } catch (error) {
@@ -67,9 +68,9 @@ export const editMeetingSlice = createSlice({
     clearDeleteState: (state) => {
       state.DeleteMeetingLoading = "idle";
     },
-    clearEditState: (state)=>{
-      state.EditMeetingLoading = "idle"
-    }
+    clearEditState: (state) => {
+      state.EditMeetingLoading = "idle";
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(editMeetingAction.pending, (state) => {
@@ -103,4 +104,4 @@ export const editMeetingSlice = createSlice({
 // //console.log("reducer editMeetingSlice", editMeetingSlice);
 
 export default editMeetingSlice.reducer;
-export const { clearDeleteState,clearEditState } = editMeetingSlice.actions;
+export const { clearDeleteState, clearEditState } = editMeetingSlice.actions;

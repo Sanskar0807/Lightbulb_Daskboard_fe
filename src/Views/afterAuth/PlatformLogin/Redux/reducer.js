@@ -22,9 +22,13 @@ const initialState = {
   google_token: "",
   calendarData: "",
   filterData: [],
-  Get_UrlLink: "",
+  Get_UrlLink:
+    "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&prompt=consent&include_granted_scopes=true&response_type=code&client_id=342561089138-mt6uoo35i445kpsvo7jov3o1mcqh2j4i.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A5003%2Fdashboard",
+
   Get_UrlCode: "",
-  Get_UrlOutlookLink: "",
+  Get_UrlOutlookLink:
+    "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=cf13d6db-00b6-40f8-92d8-4b14fc3746d9&response_type=code&redirect_uri=http://localhost:5003/dashboard&response_mode=query&scope=offline_access Calendars.ReadWrite User.ReadWrite&state=outlook",
+
   Get_UrlOutlookCode: "",
   Get_GoogleCodeResponse: "",
   FinalCalendarData: [],
@@ -54,7 +58,7 @@ export const filterMeetingData = createAsyncThunk(
         { meetingDetails: payload },
         {
           headers: {
-            Authorization: `Bearer ${t_id}`,
+            Authorization: `Bearer ${get_Token()}`,
           },
         }
       );
@@ -73,14 +77,20 @@ export const filterMeetingData = createAsyncThunk(
 //get_url by google
 export const Get_Url = createAsyncThunk("/get_url", async (_, thunkAPI) => {
   try {
-    const { data } = await services.get("meeting/get-url", {
-      headers: {
-        "ngrok-skip-browser-warning": true,
-        Authorization: `Bearer ${get_Token()}`,
+    console.log("GET Request for URL");
+
+    // const { data } = await services.get("meeting/get-url");
+    const data = [
+      {
+        googleAuthUrl:
+          "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&prompt=consent&include_granted_scopes=true&response_type=code&client_id=342561089138-mt6uoo35i445kpsvo7jov3o1mcqh2j4i.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A5003%2Fdashboard",
+        outlookAuthUrl:
+          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=cf13d6db-00b6-40f8-92d8-4b14fc3746d9&response_type=code&redirect_uri=http://localhost:5003/dashboard&response_mode=query&scope=offline_access Calendars.ReadWrite User.ReadWrite&state=outlook",
       },
-    });
-    console.log(data?.data?.response);
-    return data?.data?.response;
+    ];
+    console.log("GET URL CALL", data);
+
+    return data?.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -92,9 +102,8 @@ export const set_GoogleCode = createAsyncThunk(
     try {
       console.log("afterConsent Action", payload);
 
-      const { data } = await services.post(
-        "meeting/google/get-auth-code",
-        { code: payload },
+      const { data } = await services.get(
+        `meeting/google/get-auth-code?code=${payload}`,
         {
           headers: {
             "ngrok-skip-browser-warning": true,
@@ -102,9 +111,9 @@ export const set_GoogleCode = createAsyncThunk(
           },
         }
       );
-      console.log("afterConsent api result", data?.data?.response);
+      console.log("afterConsent api result", data?.data[0].encryptedJwtToken);
 
-      return data?.data?.response;
+      return data?.data[0].encryptedJwtToken;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -214,8 +223,9 @@ export const PlatformSlice = createSlice({
     builder.addCase(Get_Url.fulfilled, (state, action) => {
       console.log("action get url", action.payload);
       state.Get_UrlLoading = "succeeded";
-      state.Get_UrlLink = action.payload?.googleAuthUrl;
-      state.Get_UrlOutlookLink = action.payload?.outlookAuthUrl;
+      console.log("PLateform Builder", action.payload);
+      state.Get_UrlLink = action.payload[0]?.googleAuthUrl;
+      state.Get_UrlOutlookLink = action.payload[1]?.outlookAuthUrl;
       state.isUserFirstTime = action.payload?.isUserFirstTime;
     });
     builder.addCase(Get_Url.rejected, (state, action) => {
@@ -233,7 +243,19 @@ export const PlatformSlice = createSlice({
     builder.addCase(Get_UrlOutlook.rejected, (state, action) => {
       state.Get_UrlOutlookLoading = "fail";
     });
+    //set Google Code
 
+    builder.addCase(set_GoogleCode.pending, (state) => {
+      state.set_CodeOutLookLoading = "pending";
+    });
+    builder.addCase(set_GoogleCode.fulfilled, (state, action) => {
+      state.set_CodeOutLookLoading = "succeeded";
+      console.log("Token in fullfileed", action.payload);
+      window.localStorage.setItem("encryptedJwtToken", action.payload);
+    });
+    builder.addCase(set_GoogleCode.rejected, (state, action) => {
+      state.set_CodeOutLookLoading = "fail";
+    });
     // set_OutlookCode
     builder.addCase(set_OutlookCode.pending, (state) => {
       state.set_CodeOutLookLoading = "pending";

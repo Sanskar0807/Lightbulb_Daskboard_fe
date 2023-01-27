@@ -1,19 +1,11 @@
-import {
-  Avatar,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Grid, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./EditMeeting.scss";
 import "react-phone-input-2/lib/bootstrap.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  editMeetingAction,
-} from "./Redux/reducer";
+import { editMeetingAction } from "./Redux/reducer";
 import { toast } from "react-toastify";
 import crossIcon from "../../../Assets/images/crossIcon.png";
 import { get_FormatDate, get_UTCFormateDate } from "../../../utils/Helper";
@@ -120,10 +112,9 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
     } = event;
     setUpdateProfileData({ ...UpdateProfileData, [name]: value });
   };
-  
+
   return (
     <>
-      
       <div className="EditMeeting--conainer">
         <img
           src={crossIcon}
@@ -196,14 +187,14 @@ const EditMeeting = ({ setModalToggle, RowData }) => {
                   onChange={handleUserUpdate}
                 />
               </Grid> */}
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <SelectDropdown
                   dropdownData={[selectPlateForm]}
                   handleSelect={handleSelect}
                   selectState={selectPlateForm}
                   label={"Select Platform"}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={6}>
                 <TextField

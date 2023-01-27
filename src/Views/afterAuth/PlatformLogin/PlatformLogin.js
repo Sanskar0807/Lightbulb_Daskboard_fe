@@ -34,28 +34,28 @@ const PlatformLogin = () => {
 
   useEffect(() => {
     if (!Get_UrlCode) {
-      dispatch(Get_Url());
+      console.log("state", searchParams.get("state"));
+      dispatch(set_GoogleCode(searchParams.get("code")));
     }
-    setParamsCode(searchParams.get("code"));
 
-    if (searchParams.get("state") == "outlook") {
-      let temp = true;
-      if (temp) {
-        // alert("chal bhai");
-        dispatch(set_OutlookCode(searchParams.get("code")));
+    // if (searchParams.get("state") == "outlook") {
+    //   let temp = true;
+    //   if (temp) {
+    //     // alert("chal bhai");
+    //     dispatch(set_OutlookCode(searchParams.get("code")));
 
-        temp = false;
-      }
-    } else {
-      if (searchParams.get("code")) {
-        let temp = true;
-        if (temp) {
-          // alert("chal bhai");
-          dispatch(set_GoogleCode(searchParams.get("code")));
-          temp = false;
-        }
-      }
-    }
+    //     temp = false;
+    //   }
+    // } else {
+    //   if (searchParams.get("code")) {
+    //     let temp = true;
+    //     if (temp) {
+    //       // alert("chal bhai");
+    //       dispatch(set_GoogleCode(searchParams.get("code")));
+    //       temp = false;
+    //     }
+    //   }
+    // }
   }, []);
 
   // useEffect(() => {
@@ -71,14 +71,15 @@ const PlatformLogin = () => {
   }, [Get_GoogleCodeResponse]);
 
   const handleSignupWithGoogle = () => {
+    console.log("Signi in with Google Clicked");
     window.open(Get_UrlLink, "_self");
     setFlagMeeting("google");
   };
   const handleSignupWithOutlook = () => {
+    console.log("Signi in with Outlook Clicked");
     window.open(Get_UrlOutlookLink, "_self");
     setFlagMeeting("outlook");
   };
-  
 
   return (
     <GeneralLayout
@@ -98,7 +99,7 @@ const PlatformLogin = () => {
               }}
             >
               <Grid item xs={12} md={12}>
-                <h1 >Login Your Account</h1>
+                <h1>Login Your Account</h1>
                 {/* <Googledemo /> */}
                 {/* </Button> */}
               </Grid>

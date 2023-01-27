@@ -33,18 +33,23 @@ export function App() {
           <Route path={Pathname.SIGNUP} element={<SignUp />} />
           <Route path={Pathname.FORGETPASSWORD} element={<ForgetPassword />} />
           <Route path={Pathname.RESETPASSWORD} element={<ResetPassword />} />
-          <Route index path={Pathname.LANDING_PAGE} element={<Landing />} />
+          {/* <Route index path={Pathname.LANDING_PAGE} element={<Landing />} /> */}
           <Route path={Pathname.ZOOM} element={<ZoomEvent />} />
           <Route path={Pathname.UPDATEPROFILE} element={<UpdateProfile />} />
           <Route path={Pathname.VIDEOS} element={<MeetingURl/> } />
-
-          <Route path={Pathname.DASHBOARD} element={<PrivateOutlet />}>
+            <Route index path={Pathname.DASHBOARD}  element={<Dashboard />} />
+            <Route path="google" element={<GoogleSignup />} />
+            <Route path="platform" element={<PlatformLogin />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="*" element={<NotFound />} />
+          {/*<Route path={Pathname.DASHBOARD} element={<PrivateOutlet />}>
             <Route index element={<Dashboard />} />
             <Route path="google" element={<GoogleSignup />} />
             <Route path="platform" element={<PlatformLogin />} />
             <Route path="orders" element={<Orders />} />
             <Route path="*" element={<NotFound />} />
-          </Route>
+          </Route> */}
+
           <Route path="*" component={<NotFound />} />
         </Routes>
       </BrowserRouter>

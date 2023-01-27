@@ -30,8 +30,8 @@ export const removeLocalStorage = () => {
   localStorage.clear();
 };
 export const get_Token = () => {
-  return "gAAAAABjzm4FAAECAwQFBgcICQoLDA0OD5r6adEtOvDm5FNbs_sW-9FeDqAznwcRaat8HJ5OmeWVyQQSDOeRsN6VJMvsQFarx0Y2fzAzTG2V3SLtFkkyTzGG9IDLy710FIfwl54kaNn8UGIao00Wm8ncl4tE2liBcRzKuhtDh4qhzVZIKHi_8nIi83ZTNNTeW_-FaTRWkzOUifB2zBYaCzE9WLIEyxuYgnnJG5GyhuOZRjzgCDp14upojUSwxbMD_UnUYGifHVmwYnpjYzK_QjWfl7jOe0suKg==";
-  // return localStorage.getItem("t_id");
+  // return "gAAAAABjzm4FAAECAwQFBgcICQoLDA0OD5r6adEtOvDm5FNbs_sW-9FeDqAznwcRaat8HJ5OmeWVyQQSDOeRsN6VJMvsQFarx0Y2fzAzTG2V3SLtFkkyTzGG9IDLy710FIfwl54kaNn8UGIao00Wm8ncl4tE2liBcRzKuhtDh4qhzVZIKHi_8nIi83ZTNNTeW_-FaTRWkzOUifB2zBYaCzE9WLIEyxuYgnnJG5GyhuOZRjzgCDp14upojUSwxbMD_UnUYGifHVmwYnpjYzK_QjWfl7jOe0suKg==";
+  return localStorage.getItem("encryptedJwtToken");
 };
 export const get_FormatDate = (date) => {
   return new Date(date).toLocaleString();
