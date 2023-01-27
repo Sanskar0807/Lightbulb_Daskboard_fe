@@ -34,6 +34,7 @@ const PlatformLogin = () => {
 
   useEffect(() => {
     if (!Get_UrlCode) {
+      console.log("state", searchParams.get("state"));
       dispatch(set_GoogleCode(searchParams.get("code")));
     }
 
