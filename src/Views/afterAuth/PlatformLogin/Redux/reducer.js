@@ -173,7 +173,8 @@ export const FinalCalendarDataAction = createAsyncThunk(
           Authorization: `Bearer ${get_Token()}`,
         },
       });
-      console.log(data?.data);
+
+      console.log("FinalCalendarDataAction: ", data?.data);
       return data?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
