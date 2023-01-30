@@ -174,8 +174,8 @@ export const FinalCalendarDataAction = createAsyncThunk(
         },
       });
 
-      console.log("FinalCalendarDataAction: ", data?.data);
-      return data?.data;
+      console.log("FinalCalendarDataAction: ", data?.data?.data);
+      return data?.data?.data;
     } catch (error) {
       thunkAPI.rejectWithValue(error);
     }
