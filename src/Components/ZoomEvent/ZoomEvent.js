@@ -19,6 +19,8 @@ import {
 } from "../../Views/afterAuth/PlatformLogin/Redux/reducer";
 import { formateData, get_DiffTimeDuration } from "../../utils/Helper";
 import editIcon from "../../Assets/images/edit.png";
+import zoomIcon from "../../Assets/images/zoom.png";
+import gmeetIcon from "../../Assets/images/gmeet.png";
 import crossIcon from "../../Assets/images/crossIcon.png";
 import EditMeeting from "../../Views/afterAuth/EditMeeting/EditMeeting";
 import CreateMeeting from "../../Views/afterAuth/CreateMeeting/CreateMeeting";
@@ -122,10 +124,23 @@ const ZoomEvent = () => {
       ),
     },
     {
-      field: "plateform",
+      field: "platform",
       headerName: "PLATFORM",
       width: 200,
       editable: true,
+      renderCell: ({ row }) => (
+        <>
+          {row.id.includes("zoom") ? (
+            <>
+              <img src={zoomIcon} style={{ width: "60px" }} />
+            </>
+          ) : (
+            <>
+              <img src={gmeetIcon} style={{ width: "60px" }} />
+            </>
+          )}
+        </>
+      ),
     },
     {
       field: "meetingStatus",

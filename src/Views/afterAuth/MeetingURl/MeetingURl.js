@@ -1,4 +1,11 @@
-import { Box, Button, CircularProgress, Link, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  Modal,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import GeneralLayout from "../../../Layout/GeneralLayout";
@@ -6,6 +13,8 @@ import editIcon from "../../../Assets/images/edit.png";
 import deleteIcon from "../../../Assets/images/waste.png";
 import { width } from "@mui/system";
 import EditMeeting from "../EditMeeting/EditMeeting";
+import zoomIcon from "../../../Assets/images/zoom.png";
+import gmeetIcon from "../../../Assets/images/gmeet.png";
 import crossIcon from "../../../Assets/images/crossIcon.png";
 import { useDispatch, useSelector } from "react-redux";
 import { formateData, get_DiffTimeDuration } from "../../../utils/Helper";
@@ -90,7 +99,7 @@ const MeetingURl = () => {
       ),
     },
   ];
-  
+
   const Newcolumns = [
     { field: "meetingTitle", headerName: "Meeting Title", width: 150 },
     {
@@ -103,7 +112,7 @@ const MeetingURl = () => {
       field: "id",
       headerName: "Videos Url",
       width: 200,
-      renderCell: ({row}) => (
+      renderCell: ({ row }) => (
         <>
           <Modal
             open={modalToggle}
@@ -140,10 +149,7 @@ const MeetingURl = () => {
                 }}
               />
               <video width="50%" height="500" controls>
-                <source
-                  src={row?.meetingLink}
-                  type="video/mp4"
-                />
+                <source src={row?.meetingLink} type="video/mp4" />
               </video>
             </div>
           </Modal>
@@ -161,20 +167,30 @@ const MeetingURl = () => {
       ),
     },
     {
-      field: "plateform",
-      headerName: "Plateform",
+      field: "platform",
+      headerName: "Platform",
       width: 200,
       editable: true,
+      renderCell: ({ row }) => (
+        <>
+          {row.id.includes("zoom") ? (
+            <>
+              <img src={zoomIcon} style={{ width: "60px" }} />
+            </>
+          ) : (
+            <>
+              <img src={gmeetIcon} style={{ width: "60px" }} />
+            </>
+          )}
+        </>
+      ),
     },
     {
       field: "meetingStatus",
       headerName: "Status",
       width: 200,
       renderCell: (params) => (
-        <Typography
-          variant="contained"
-          color={`green`}
-        >
+        <Typography variant="contained" color={`green`}>
           Completed
         </Typography>
       ),
@@ -189,7 +205,9 @@ const MeetingURl = () => {
           // sx={{ width: "7rem", fontSize: "16px", padding: "4px" }}
           color={`black`}
         >
-          {row.botStatus ? get_DiffTimeDuration(row.startTime, row.endTime) :get_DiffTimeDuration(row.startTime, row.endTime)}
+          {row.botStatus
+            ? get_DiffTimeDuration(row.startTime, row.endTime)
+            : get_DiffTimeDuration(row.startTime, row.endTime)}
         </Typography>
       ),
     },
@@ -228,15 +246,11 @@ const MeetingURl = () => {
       videoUrl: "https://meet.google.com/pav-vgjk-xaf",
     },
   ];
-  const {
-    FinalCalendarData
-  } = useSelector((state) => state.platform);
-  const {
-    getVideoMeeting,getVideoloading
-  } = useSelector((state) => state.video);
+  const { FinalCalendarData } = useSelector((state) => state.platform);
+  const { getVideoMeeting, getVideoloading } = useSelector(
+    (state) => state.video
+  );
   const dispatch = useDispatch();
-
-
 
   const [modalToggle, setModalToggle] = useState(false);
   const handleModalOpen = () => {
@@ -251,41 +265,39 @@ const MeetingURl = () => {
     dispatch(getVideoAction());
   }, [dispatch]);
 
-  
   return (
     <div className="MeetingURl">
       <GeneralLayout>
         <div className="ZoomUI">
-          <h1 className="ZoomUI--Header" >Videos Link</h1>
+          <h1 className="ZoomUI--Header">Videos Link</h1>
           {/* <Button variant="contained" onClick={(e)=>{handleSync(e)}}>
           Sync
         </Button> */}
           <Box sx={{ height: 500, width: "100%" }}>
-          {FinalCalendarData?.length <= 0 &&
-          FinalCalendarData != [] &&
-          FinalCalendarData != "" ? (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <DataGrid
-              rows={formateData(getVideoMeeting)}
-              // rows={rows}
-              columns={Newcolumns}
-              pstartTimeSize={5}
-              rowsPerPstartTimeOptions={[5]}
-              loading={getVideoloading === "pending"}
-              disableSelectionOnClick
-              experimentalFeatures={{ newEditingApi: true }}
-              // onSelectionModelChange={handleSelectedRow}
-              
+            {FinalCalendarData?.length <= 0 &&
+            FinalCalendarData != [] &&
+            FinalCalendarData != "" ? (
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </div>
+            ) : (
+              <DataGrid
+                rows={formateData(getVideoMeeting)}
+                // rows={rows}
+                columns={Newcolumns}
+                pstartTimeSize={5}
+                rowsPerPstartTimeOptions={[5]}
+                loading={getVideoloading === "pending"}
+                disableSelectionOnClick
+                experimentalFeatures={{ newEditingApi: true }}
+                // onSelectionModelChange={handleSelectedRow}
 
-              // onRowClick={(data) => {
-              //   handleMeetingUrl(data);
-              // }}
-            />
-          )}
-        </Box>
+                // onRowClick={(data) => {
+                //   handleMeetingUrl(data);
+                // }}
+              />
+            )}
+          </Box>
         </div>
         {/* <video width="100%" height="500" controls>
           <source

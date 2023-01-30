@@ -4,6 +4,7 @@ export const formateData = (items) => {
       id: e?.meetingUrl === null ? "" : e?.meetingUrl,
       // meetingLink: e?.meetingUrl,
       organizer: e?.organizer,
+
       meetingTitle: e?.meetingTitle,
       timeZone: e?.timeZone,
 
@@ -11,7 +12,7 @@ export const formateData = (items) => {
 
       endTime: get_FormatDate(e?.endTime),
 
-      plateform: e?.plateform,
+      platform: e?.platform,
 
       meetingUrl: e?.meetingTitle,
 
