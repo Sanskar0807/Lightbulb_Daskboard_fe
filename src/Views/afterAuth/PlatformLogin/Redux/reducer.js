@@ -22,13 +22,9 @@ const initialState = {
   google_token: "",
   calendarData: "",
   filterData: [],
-  Get_UrlLink:
-    "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&prompt=consent&include_granted_scopes=true&response_type=code&client_id=342561089138-mt6uoo35i445kpsvo7jov3o1mcqh2j4i.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A5003%2Fdashboard",
-
+  Get_UrlLink: "",
   Get_UrlCode: "",
-  Get_UrlOutlookLink:
-    "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=cf13d6db-00b6-40f8-92d8-4b14fc3746d9&response_type=code&redirect_uri=http://localhost:5003/dashboard&response_mode=query&scope=offline_access Calendars.ReadWrite User.ReadWrite&state=outlook",
-
+  Get_UrlOutlookLink: "",
   Get_UrlOutlookCode: "",
   Get_GoogleCodeResponse: "",
   FinalCalendarData: [],
@@ -78,16 +74,20 @@ export const filterMeetingData = createAsyncThunk(
 export const Get_Url = createAsyncThunk("/get_url", async (_, thunkAPI) => {
   try {
     console.log("GET Request for URL");
-
-    // const { data } = await services.get("meeting/get-url");
-    const data = [
-      {
-        googleAuthUrl:
-          "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&prompt=consent&include_granted_scopes=true&response_type=code&client_id=342561089138-mt6uoo35i445kpsvo7jov3o1mcqh2j4i.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A5003%2Fdashboard",
-        outlookAuthUrl:
-          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=cf13d6db-00b6-40f8-92d8-4b14fc3746d9&response_type=code&redirect_uri=http://localhost:5003/dashboard&response_mode=query&scope=offline_access Calendars.ReadWrite User.ReadWrite&state=outlook",
+    const config = {
+      headers: {
+        environment: "Dev",
       },
-    ];
+    };
+    const { data } = await services.get("meeting/get-url", config);
+    // const data = [
+    //   {
+    //     googleAuthUrl:
+    //       "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&prompt=consent&include_granted_scopes=true&response_type=code&client_id=342561089138-mt6uoo35i445kpsvo7jov3o1mcqh2j4i.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A5003%2Fdashboard",
+    //     outlookAuthUrl:
+    //       "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=cf13d6db-00b6-40f8-92d8-4b14fc3746d9&response_type=code&redirect_uri=http://localhost:5003/dashboard&response_mode=query&scope=offline_access Calendars.ReadWrite User.ReadWrite&state=outlook",
+    //   },
+    // ];
     console.log("GET URL CALL", data);
 
     return data?.data;
