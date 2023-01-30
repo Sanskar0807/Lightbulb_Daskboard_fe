@@ -51,7 +51,7 @@ export const filterMeetingData = createAsyncThunk(
       console.log("filter_meeting ACTION with t_id", payload, t_id);
       const response = await services.post(
         "/meeting/botJoin-meeting",
-        { meetingDetails: payload },
+        { meetingDetails: payload, botStatus: true },
         {
           headers: {
             Authorization: `Bearer ${get_Token()}`,
