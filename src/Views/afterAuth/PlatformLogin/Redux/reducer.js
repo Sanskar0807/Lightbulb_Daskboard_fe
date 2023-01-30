@@ -50,7 +50,7 @@ export const filterMeetingData = createAsyncThunk(
       let t_id = localStorage.getItem("t_id");
       console.log("filter_meeting ACTION with t_id", payload, t_id);
       const response = await services.post(
-        "/meeting/botJoin-meeting",
+        "/meeting/bot-join-meeting",
         { meetingDetails: payload, botStatus: true },
         {
           headers: {
