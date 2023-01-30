@@ -33,8 +33,10 @@ const PlatformLogin = () => {
   const [FlagMeeting, setFlagMeeting] = useState("");
 
   useEffect(() => {
+    dispatch(Get_Url());
+
     if (!Get_UrlCode) {
-      console.log("state", searchParams.get("state"));
+      // console.log("state", searchParams.get("state"));
       dispatch(set_GoogleCode(searchParams.get("code")));
     }
 
