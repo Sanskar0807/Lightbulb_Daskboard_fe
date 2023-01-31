@@ -22,83 +22,17 @@ import { FinalCalendarDataAction } from "../PlatformLogin/Redux/reducer";
 import { getVideoAction } from "./Redux/reducer";
 
 const MeetingURl = () => {
-  const columns = [
-    {
-      field: "id",
-      headerName: "ROW",
-      width: 100,
-    },
-    { field: "meetingTitle", headerName: "MEETING TITLE", width: 150 },
-    {
-      field: "organizer",
-      headerName: "ORGANIZER",
-      width: 200,
-      editable: true,
-    },
-    {
-      field: "videoUrl",
-      headerName: "VIDEOS URL",
-      width: 400,
-      editable: true,
-      valueGetter: handleOpenVideo,
-      renderCell: () => (
-        <>
-          <Modal
-            open={modalToggle}
-            onClose={modalToggle}
-            aria-labelledby="parent-modal-title"
-            aria-describedby="parent-modal-description"
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src={crossIcon}
-                style={{
-                  width: "25px",
-                  position: "absolute",
-                  right: "10px",
-                  top: "1rem",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setModalToggle(false);
-                }}
-              />
-              <video width="50%" height="500" controls>
-                <source
-                  src="https://aws-test-bucket-dec.s3.ap-south-1.amazonaws.com/2test"
-                  type="video/mp4"
-                />
-              </video>
-            </div>
-          </Modal>
-          <strong>
-            <Button
-              variant="contained"
-              size="small"
-              style={{ marginLeft: 16 }}
-              onClick={handleModalOpen}
-            >
-              Play Video
-            </Button>
-          </strong>
-        </>
-      ),
-    },
-  ];
+  const download = (filename, text) => {
+    console.log("Download Called");
+    var element = document.createElement("a");
+    element.setAttribute("href", text);
+    console.log("Element", element);
+    element.setAttribute("download", filename);
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   const Newcolumns = [
     { field: "meetingTitle", headerName: "Meeting Title", width: 150 },
@@ -112,59 +46,82 @@ const MeetingURl = () => {
       field: "id",
       headerName: "Videos Url",
       width: 200,
-      renderCell: ({ row }) => (
+      // renderCell: ({ row }) => (
+      //   <>
+      //     <Modal
+      //       open={modalToggle}
+      //       onClose={modalToggle}
+      //       aria-labelledby="parent-modal-title"
+      //       aria-describedby="parent-modal-description"
+      //       sx={{
+      //         display: "flex",
+      //         justifyContent: "center",
+      //         alignItems: "center",
+      //       }}
+      //     >
+      //       <div
+      //         style={{
+      //           width: "100%",
+      //           backgroundColor: "white",
+      //           height: "100vh",
+      //           display: "flex",
+      //           justifyContent: "center",
+      //           alignItems: "center",
+      //         }}
+      //       >
+      //         <img
+      //           src={crossIcon}
+      //           style={{
+      //             width: "25px",
+      //             position: "absolute",
+      //             right: "10px",
+      //             top: "1rem",
+      //             cursor: "pointer",
+      //           }}
+      //           onClick={() => {
+      //             setModalToggle(false);
+      //           }}
+      //         />
+      //         <video width="50%" height="500" controls>
+      //           <source src={row?.meetingLink} type="video/mp4" />
+      //         </video>
+      //       </div>
+      //     </Modal>
+      //     <strong>
+      //       <Button
+      //         variant="contained"
+      //         size="small"
+      //         style={{ marginLeft: 16 }}
+      //         onClick={handleModalOpen}
+      //       >
+      //         Play Video
+      //       </Button>
+      //     </strong>
+      //   </>
+      // ),
+      renderCell: (param) => (
         <>
-          <Modal
-            open={modalToggle}
-            onClose={modalToggle}
-            aria-labelledby="parent-modal-title"
-            aria-describedby="parent-modal-description"
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+          <Button
+            variant="contained"
+            onClick={() => {
+              window.open(param?.row?.recMetUrl);
             }}
           >
-            <div
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src={crossIcon}
-                style={{
-                  width: "25px",
-                  position: "absolute",
-                  right: "10px",
-                  top: "1rem",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setModalToggle(false);
-                }}
-              />
-              <video width="50%" height="500" controls>
-                <source src={row?.meetingLink} type="video/mp4" />
-              </video>
-            </div>
-          </Modal>
-          <strong>
-            <Button
-              variant="contained"
-              size="small"
-              style={{ marginLeft: 16 }}
-              onClick={handleModalOpen}
-            >
-              Play Video
-            </Button>
-          </strong>
+            Open Video
+          </Button>
+          {/* <Button var>
+            
+            <a href={param?.row?.recMetUrl} download>
+              Download
+            </a>
+          </Button> */}
         </>
       ),
+    },
+    {
+      field: "recMetUrl",
+      headerName: " Recording URL",
+      width: 200,
     },
     {
       field: "platform",

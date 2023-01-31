@@ -4,7 +4,7 @@ export const formateData = (items) => {
       id: e?.meetingUrl === null ? "" : e?.meetingUrl,
       // meetingLink: e?.meetingUrl,
       organizer: e?.organizer,
-
+      recMetUrl: e?.recMetUrl,
       meetingTitle: e?.meetingTitle,
       timeZone: e?.timeZone,
 
