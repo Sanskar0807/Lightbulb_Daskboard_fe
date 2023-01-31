@@ -162,7 +162,7 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
-                  Select Account
+                  Select Platform
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -171,7 +171,7 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
                   label="Select Platform"
                   onChange={handlePlatformChange}
                 >
-                  <MenuItem value={`zoom`}>Zoom </MenuItem>
+                  <MenuItem value={`zoomMeeting`}>Zoom </MenuItem>
                   <MenuItem value={`googleMeet`}>Google Meet </MenuItem>
                 </Select>
               </FormControl>
