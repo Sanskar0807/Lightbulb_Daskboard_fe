@@ -44,14 +44,27 @@ export const deleteMeetingAction = createAsyncThunk(
     try {
       console.log("deleteMeetingAction action call", payload, get_Token());
 
-      const headers = {
-        "ngrok-skip-browser-warning": true,
-        Authorization: `Bearer ${get_Token()}`,
-      };
+      const token = get_Token();
 
-      const { data } = await services.delete("meeting/calendar", payload, {
-        headers,
-      });
+      // console.log(token, "Hello");
+      // const headers = {
+      //   "ngrok-skip-browser-warning": true,
+      //   Authorization: "Bearer " + token,
+      // };
+
+      // console.log(headers, "hello");
+
+      const { data } = await services.delete(
+        "meeting/calendar",
+        {
+          headers: {
+            "ngrok-skip-browser-warning": true,
+            "Content-type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        },
+        payload
+      );
       console.log("deleteMeetingAction reponse", data);
       thunkAPI.dispatch(FinalCalendarDataAction());
       return data?.message;
