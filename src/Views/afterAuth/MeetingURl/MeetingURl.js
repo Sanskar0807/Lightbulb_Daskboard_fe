@@ -291,7 +291,6 @@ const MeetingURl = () => {
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: true }}
                 // onSelectionModelChange={handleSelectedRow}
-
                 // onRowClick={(data) => {
                 //   handleMeetingUrl(data);
                 // }}

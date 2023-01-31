@@ -167,7 +167,7 @@ export const FinalCalendarDataAction = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       // const { data } = await axios.get("https://80b4-49-249-44-114.in.ngrok.io/api/v1/meeting/get_calendar", {
-      const { data } = await services.get("meeting/calendar", {
+      const { data } = await services.get("meeting/calendar?limit=30", {
         headers: {
           "ngrok-skip-browser-warning": true,
           Authorization: `Bearer ${get_Token()}`,
