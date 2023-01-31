@@ -162,7 +162,7 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
-                  Select Account
+                  Select Platform
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
