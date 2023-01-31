@@ -171,7 +171,7 @@ const CreateMeeting = ({ setCreateMeetingModal }) => {
                   label="Select Platform"
                   onChange={handlePlatformChange}
                 >
-                  <MenuItem value={`zoom`}>Zoom </MenuItem>
+                  <MenuItem value={`zoomMeeting`}>Zoom </MenuItem>
                   <MenuItem value={`googleMeet`}>Google Meet </MenuItem>
                 </Select>
               </FormControl>
